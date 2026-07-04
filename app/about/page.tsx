@@ -31,11 +31,11 @@ export default async function About() {
     <main className="bg-white container mx-auto px-4 py-12 text-center">
       <h2 className="text-black text-4xl font-bold mb-4">About Me</h2>
       <p className="text-lg text-gray-700">
-        This about page share more information about my background and work.
+        This about page shares more information about my background and work.
       </p>
 
       {errorMessage ? (
-        <p className="mt-8 text-danger" role="alert">
+        <p className="mt-8 text-red" role="alert">
           Could not load work history: {errorMessage}
         </p>
       ) : (
