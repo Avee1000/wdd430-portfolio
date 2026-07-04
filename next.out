@@ -1,0 +1,9 @@
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3939
+- Network:       http://10.185.129.138:3939
+✓ Ready in 641ms
+
+ GET /api/work-history 200 in 231ms (next.js: 200ms, application-code: 32ms)
+ GET /api/work-history 200 in 11ms (next.js: 5ms, application-code: 7ms)
+ GET /about 200 in 391ms (next.js: 99ms, application-code: 293ms)
+[?25h
