@@ -10,7 +10,7 @@ const navItems = [
 
 export default function Header() {
     return (
-        <header className="border-b border-gray-200 bg-black shadow-sm">
+        <header className="border-b border-gray-200 bg-black shadow-sm text-gray-100" >
             <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
                 <Link
