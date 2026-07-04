@@ -3,5 +3,7 @@ import { workHistory } from "@/data/workHistory";
 export const dynamic = "force-static";
 
 export async function GET() {
-  return Response.json(workHistory);
+  return Response.json(workHistory, {
+    headers: { "Content-Type": "application/json" },
+  });
 }
