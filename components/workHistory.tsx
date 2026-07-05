@@ -16,9 +16,15 @@ export default function WorkHistory({ title, company, startDate, endDate, descri
                 {startDate} - {endDate}
             </p>
             <p className="text-gray-700 mb-3">{description}</p>
-            <p className="text-sm text-gray-600 mb-3">
-                <strong>Skills:</strong> {skills.join(', ')}
-            </p>
+            <ul className="flex flex-wrap gap-2"><strong>Skills:</strong>
+                {skills.map((skill) => (
+                    <li
+                        className="px-3 py-1 bg-orange-200 text-gray-900 text-sm rounded-full"
+                    >
+                        {skill}
+                    </li>
+                ))}
+      </ul>
         </article>
     );
 }
