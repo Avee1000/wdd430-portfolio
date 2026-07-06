@@ -19,6 +19,7 @@ export default function WorkHistory({ title, company, startDate, endDate, descri
             <ul className="flex flex-wrap gap-2"><strong>Skills:</strong>
                 {skills.map((skill) => (
                     <li
+                        key={skill}
                         className="px-3 py-1 bg-orange-200 text-gray-900 text-sm rounded-full"
                     >
                         {skill}

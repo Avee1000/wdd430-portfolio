@@ -16,13 +16,13 @@ export default function ProjectCard(p: ProjectProps) {
             <ul className="mt-auto flex flex-wrap gap-2 mb-3"><strong>Technologies:</strong>
                 {p.technologies.map((tech: string) => (
                     <li
+                        key={tech}
                         className=" px-3 py-1 bg-orange-200 text-gray-900 text-sm rounded-full"
                     >
                         {tech}
                     </li>
                 ))}
             </ul>
-            {/* <p className="text-sm text-gray-600 mb-3">{p.type}</p> */}
             <div className="mt-auto">
                 {p.link && (
                     <a

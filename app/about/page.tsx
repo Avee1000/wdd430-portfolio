@@ -2,7 +2,7 @@ import WorkList from "@/components/WorkList";
 import type { Work } from "@/data/workHistory";
 import { workHistory } from "@/data/workHistory";
 
-let works: Work[] = workHistory;
+const works: Work[] = workHistory;
 
 export default async function About() {
   return (

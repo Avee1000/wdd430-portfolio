@@ -90,7 +90,7 @@ export default function Home() {
       <section className="text-center py-12">
         <h1 className="text-black text-4xl font-bold mb-4">My Portfolio</h1>
         <p className="text-lg text-gray-700">
-          I'm a full-stack developer learning Next.js and React. Here are some of my recent projects.
+          I&apos;m a full-stack developer learning Next.js and React. Here are some of my recent projects.
         </p>
       </section>
       <ProjectList projects={projects} />

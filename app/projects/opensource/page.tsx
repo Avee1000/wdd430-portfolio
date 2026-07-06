@@ -9,10 +9,6 @@ async function getProjects() {
     return res.json();
 }
 
-interface ProjectCardProps {
-  projects: pro[];
-}
-
 export function ProjectList({ projects }: { projects: pro[] }) {
   return (
     <section className="grid gap-4 md:grid-cols-2">

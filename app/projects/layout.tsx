@@ -19,7 +19,7 @@ export default function ProjectsLayout({ children }: { children: React.ReactNode
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="block md px-4 py-4 text-sm font-medium text-white-600 transition duration-300   hover:text-gray-900 m-0 hover:bg-orange-100">
+                  className="block px-4 py-4 text-sm font-medium text-gray-100 transition duration-300 hover:bg-orange-100 hover:text-gray-900">
                   {item.label}
                 </Link>
               </li>
