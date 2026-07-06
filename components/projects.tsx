@@ -29,7 +29,7 @@ export default function ProjectCard(p: ProjectProps) {
                         href={p.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 flex h-12 text-white bg-black w-full items-center justify-center rounded border border-solid border-black px-5 transition-colors hover:border-black hover:text-gray-900 hover:bg-orange-100 dark:border-orange/[.145] dark:hover:bg-orange-100  md:w-158"
+                        className="mt-2 flex h-12 text-white bg-black w-full items-center justify-center rounded border border-solid border-black px-5 transition-colors hover:border-black hover:text-gray-900 hover:bg-orange-100 dark:border-orange/[.145] dark:hover:bg-orange-100  md:w-39.5"
                     >
                         View Project
                     </a>

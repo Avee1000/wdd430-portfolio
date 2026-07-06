@@ -15,7 +15,7 @@ export default function ProjectCard({title, description, technologies, link}: Pr
       </p>
       {link && (
         <p className="mt-2">
-          <a href={link} target="_blank" rel="noopener noreferrer" className="flex h-12 text-white bg-black w-full items-center justify-center rounded border border-solid border-black/[.08] px-5 transition-colors hover:border-black hover:text-gray-900 hover:bg-orange-100 dark:border-orange/[.145] dark:hover:bg-orange-100  md:w-[158px]">View Project</a>
+          <a href={link} target="_blank" rel="noopener noreferrer" className="flex h-12 text-white bg-black w-full items-center justify-center rounded border border-solid border-black/8 px-5 transition-colors hover:border-black hover:text-gray-900 hover:bg-orange-100 dark:border-orange/[.145] dark:hover:bg-orange-100  md:w-39.5">View Project</a>
         </p>
       )}
     </article>
