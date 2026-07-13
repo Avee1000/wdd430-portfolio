@@ -2,8 +2,9 @@ import ProjectCard from "@/components/projects";
 import { ProjectProps as pro } from "@/components/projects";
 
 async function getProjects() {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/projects`, { cache: 'no-store' });
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const res = await fetch(new URL('/api/projects', baseUrl).toString(), { cache: 'no-store' });
+
 
     if (!res.ok) throw new Error("Failed to fetch projects");
     return res.json();
