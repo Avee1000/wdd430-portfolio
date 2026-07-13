@@ -3,7 +3,7 @@ import { ProjectProps as pro } from "@/components/projects";
 
 async function getProjects() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  const res = await fetch(new URL('/api/projects', baseUrl).toString(), { cache: 'no-store' });
+  const res = await fetch(new URL('/api/projects', baseUrl), { cache: 'no-store' });
 
 
     if (!res.ok) throw new Error("Failed to fetch projects");
