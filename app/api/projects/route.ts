@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { getProjects } from "@/lib/projects-db";   
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   // 1. Get the URL from the request
   const { searchParams } = new URL(request.url);
   
