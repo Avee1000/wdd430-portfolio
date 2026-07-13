@@ -6,7 +6,8 @@ async function getProjects() {
     const res = await fetch(`${baseUrl}/api/projects?type=opensource`, { cache: 'no-store' });
 
     if (!res.ok) throw new Error("Failed to fetch projects");
-    return res.json();
+    const json = await res.json();
+    return json?.data ?? json;
 }
 
 export function ProjectList({ projects }: { projects: pro[] }) {
