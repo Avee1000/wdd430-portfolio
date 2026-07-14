@@ -1,6 +1,7 @@
 // app/projects/layout.tsx
 
 import Link from 'next/link';
+import { ProjectSearch } from "@/components/ProjectSearch";
 
 const navItems = [
   { href: "/", label: "Overview" },
@@ -27,6 +28,7 @@ export default function ProjectsLayout({ children }: { children: React.ReactNode
           </ul>
         </nav>
       </section>
+      <ProjectSearch />
         {children}
     </div>
   );

@@ -8,8 +8,8 @@
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <article key={index} className="space-y-4 rounded-3xl bg-slate-200 p-6">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <article key={index} className="space-y-4  space-x-10 rounded-3xl bg-slate-200 p-6">
             <div className="h-6 w-2/3 rounded-md bg-slate-300" />
             <div className="h-4 w-full rounded-md bg-slate-300" />
             <div className="h-4 w-4/5 rounded-md bg-slate-300" />

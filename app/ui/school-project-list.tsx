@@ -1,10 +1,9 @@
 export default function SchoolProjectList() {
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12 animate-pulse">
-      <section className="space-y-4 mb-10 text-center">
-        <div className="h-10 mx-auto w-2/5 rounded-md bg-slate-200" />
+    <main className="max-w-4xl mx-auto px-4 py-4 animate-pulse">
+      {/* <section className="space-y-4 mb-10 text-center">
         <div className="h-4 mx-auto w-3/5 rounded-md bg-slate-200" />
-      </section>
+      </section> */}
 
       <section className="grid gap-4 md:grid-cols-2">
         {Array.from({ length: 2 }).map((_, index) => (
