@@ -11,7 +11,7 @@ const navItems = [
 
 export default function ProjectsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <div className='flex-1'>
       <section className='w-full h-auto bg-gray-800 flex items-center text-white '>
         <nav>
           <ul className="flex items-center gap-0">

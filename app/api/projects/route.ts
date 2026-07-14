@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   console.log('projects request type:', type);
 
       // Temporarily in your data fetch — remove after testing
-  await new Promise(res => setTimeout(res, 5000));
+  // await new Promise(res => setTimeout(res, 5000));
 
   // 4. Return as a JSON response
   return NextResponse.json(projects);

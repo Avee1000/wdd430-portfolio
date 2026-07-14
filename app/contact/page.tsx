@@ -9,7 +9,7 @@ export default function Contact() {
       <section className="space-y-8">
         <article className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-semibold mb-3">Email</h2>
-          <p className="text-gray-700">Your email address goes here.</p>
+          <p className="text-gray-700">My email address goes here.</p>
         </article>
 
         <article className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
