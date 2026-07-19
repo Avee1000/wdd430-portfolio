@@ -1,6 +1,7 @@
 import ProjectList from "@/components/ProjectList";
 import { fetchFilteredProjects } from "./api/route";
 import Pagination from "@/components/Pagination";
+import { Suspense } from "react";
 
 
 // async function getProjects() {
@@ -41,8 +42,9 @@ export default async function Home(props: {
         {/* The ProjectList now receives the filtered data! */}
         <ProjectList projects={projects} />
         <div className="w-full flex justify-center my-8">
-          <Pagination searchParams={props.searchParams} />
-        </div>
+<Suspense fallback={<div className="text-gray-500">Loading pages...</div>}>
+            <Pagination searchParams={props.searchParams} />
+          </Suspense>        </div>
       </main>
     </div>
   );
