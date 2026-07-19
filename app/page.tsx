@@ -2,6 +2,7 @@ import ProjectList from "@/components/ProjectList";
 import { fetchFilteredProjects } from "./api/route";
 import Pagination from "@/components/Pagination";
 import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 
 // async function getProjects() {
@@ -38,11 +39,11 @@ export default async function Home(props: {
             I&apos;m a full-stack developer learning Next.js and React. Here are some of my recent projects.
           </p>
         </section>
-        
+
         {/* The ProjectList now receives the filtered data! */}
         <ProjectList projects={projects} />
         <div className="w-full flex justify-center my-8">
-<Suspense fallback={<div className="text-gray-500">Loading pages...</div>}>
+          <Suspense fallback={<Spinner data-icon='inline-end' className="text-black" />}>
             <Pagination searchParams={props.searchParams} />
           </Suspense>        </div>
       </main>

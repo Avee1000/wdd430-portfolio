@@ -1,11 +1,7 @@
-'use client'
-
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { ProjectSearch } from "@/components/ProjectSearch";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
@@ -26,8 +22,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-  const home = pathname === '/';
 
   return (
     <html
@@ -37,7 +31,7 @@ export default function RootLayout({
     >
       <body suppressHydrationWarning className="flex flex-col min-h-screen">
         <Header />
-        {home && <ProjectSearch />}
+        {/* {home && <ProjectSearch />} */}
         {children}
         <Footer />
       </body>
