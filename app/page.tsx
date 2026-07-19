@@ -3,6 +3,7 @@ import { fetchFilteredProjects } from "./api/route";
 import Pagination from "@/components/Pagination";
 import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import { ProjectSearch } from "@/components/ProjectSearch";
 
 
 // async function getProjects() {
@@ -31,6 +32,7 @@ export default async function Home(props: {
   // 3. Render the page using those filtered projects
   return (
     <div className="flex-1 ">
+      <ProjectSearch />
 
       <main className="max-w-4xl mx-auto px-4 py-12 w-full">
         <section className="text-center py-12">
