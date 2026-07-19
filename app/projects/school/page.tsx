@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import ProjectCard from "@/components/projects";
 import { ProjectProps as pro } from "@/components/projects";
-import SchoolProjectList from "@/app/ui/school-project-list";
+import SchoolProjectList from "@/components/ui/school-project-list";
 
 async function getProjects() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';

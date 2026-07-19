@@ -1,5 +1,4 @@
 import ProjectList from "@/components/ProjectList";
-import { ProjectSearch } from "@/components/ProjectSearch";
 import { fetchFilteredProjects } from "./api/route";
 import Pagination from "@/components/Pagination";
 
@@ -29,8 +28,7 @@ export default async function Home(props: {
 
   // 3. Render the page using those filtered projects
   return (
-    <div className="flex-1">
-      <ProjectSearch />
+    <div className="flex-1 ">
 
       <main className="max-w-4xl mx-auto px-4 py-12 w-full">
         <section className="text-center py-12">
