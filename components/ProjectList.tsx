@@ -1,6 +1,7 @@
 import ProjectCard  from "./ProjectCard";
 
 interface Project {
+  id: string | number;
   title: string;
   description: string;
   technologies: string[];

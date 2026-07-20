@@ -1,6 +1,6 @@
 import ProjectList from "@/components/ProjectList";
 import { fetchFilteredProjects } from "./api/route";
-import Pagination from "@/components/Pagination";
+import Pagination from "@/components/HomePagination";
 import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { ProjectSearch } from "@/components/ProjectSearch";
@@ -47,7 +47,8 @@ export default async function Home(props: {
         <div className="w-full flex justify-center my-8">
           <Suspense fallback={<Spinner data-icon='inline-end' className="text-black" />}>
             <Pagination searchParams={props.searchParams} />
-          </Suspense>        </div>
+          </Suspense>
+        </div>
       </main>
     </div>
   );

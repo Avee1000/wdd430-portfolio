@@ -32,3 +32,8 @@ export async function createProject(formData: FormData) {
     revalidatePath('/projects');
     redirect('/projects');
 }
+
+export async function deleteProject(id: number) {
+    await sql`DELETE FROM projects WHERE id = ${id}`;
+    revalidatePath('/projects');
+}

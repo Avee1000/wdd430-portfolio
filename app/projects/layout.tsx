@@ -11,6 +11,7 @@ const navItems = [
   { href: "/projects/opensource", label: "Opensource" },
   { href: "/projects/school", label: "School" },
   { href: "/projects/create", label: "Create" },
+  { href: "/projects/delete", label: "Delete" }
 ];
 
 export default function ProjectsLayout({ children }: { children: React.ReactNode }) {

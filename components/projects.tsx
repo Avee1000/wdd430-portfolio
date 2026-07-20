@@ -35,7 +35,6 @@ export default function ProjectCard(p: ProjectProps) {
                     </a>
                 )}
             </div>
-
         </article>
     )
 }

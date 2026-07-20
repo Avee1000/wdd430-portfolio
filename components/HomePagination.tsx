@@ -1,6 +1,6 @@
 // Remove 'use client' entirely
 
-import { fetchSchoolProjectsPages } from "@/app/api/route"; 
+import { fetchProjectsPages } from "@/app/api/route"; 
 import Link from "next/link";
 
 export default async function Pagination(props: {
@@ -11,7 +11,7 @@ export default async function Pagination(props: {
   const query = searchParams?.query || '';
   
   const currentPage = Number(searchParams?.page) || 1;
-  const pages = await fetchSchoolProjectsPages(query);
+  const pages = await fetchProjectsPages(query);
 
   return (
     <div className="flex flex-row justify-center items-center">
