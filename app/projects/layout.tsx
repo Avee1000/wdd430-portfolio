@@ -4,14 +4,13 @@
 import Link from 'next/link';
 import { ProjectSearch } from "@/components/ProjectSearch";
 import { usePathname } from 'next/navigation';
-import { Suspense } from 'react';
 
 const navItems = [
   { href: "/projects", label: "Overview" },
   { href: "/projects/opensource", label: "Opensource" },
   { href: "/projects/school", label: "School" },
   { href: "/projects/create", label: "Create" },
-  { href: "/projects/delete", label: "Delete" }
+  { href: "/projects/edit", label: "Edit" },
 ];
 
 export default function ProjectsLayout({ children }: { children: React.ReactNode }) {

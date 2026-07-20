@@ -37,3 +37,30 @@ export async function deleteProject(id: number) {
     await sql`DELETE FROM projects WHERE id = ${id}`;
     revalidatePath('/projects');
 }
+
+export async function updateProject(id: string | number, formData: FormData) {
+        const raw = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        technologies: formData.getAll('technologies').filter((t) => t.toString().trim() !== ""),
+        link: formData.get('link'),
+        type: formData.get('type'),
+    }
+
+    const parsed = ProjectFormSchema.safeParse(raw);
+    if (!parsed.success) {
+        throw new Error('Invalid project input.' + parsed.error.toString());
+    }
+
+    const { title, description, type, technologies, link} = parsed.data;
+    await sql`UPDATE projects  
+    SET 
+    title = ${title},
+    description = ${description},
+    type = ${type},
+    technologies = ${technologies as any}::text[],
+    link = ${link}
+    WHERE id = ${id}`;
+    revalidatePath('/projects/edit');
+    // redirect('/projects/edit');
+}
