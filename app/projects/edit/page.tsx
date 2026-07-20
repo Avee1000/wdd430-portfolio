@@ -1,4 +1,4 @@
-import DeleteProjects from "@/components/DeleteProjects";
+import DeleteProjects from "@/components/EditProjects";
 import { ProjectProps } from "@/components/projects";
 import { fetchFilteredSchoolProjects } from "@/app/api/route";
 import Pagination from "@/components/Pagination";
