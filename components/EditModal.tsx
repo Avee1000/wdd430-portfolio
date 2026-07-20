@@ -107,7 +107,7 @@ export default function Edit({ isOpen, onClose, project }: EditModalProps) {
             {isOpen && (
                 <dialog
                     className="fixed inset-0 m-0 h-full w-full bg-black/80 flex justify-center items-center backdrop-blur-md z-11 p-4">
-                    <div className="relative max-w-150 mx-auto px-4 py-12 w-full h-auto items-center transition-all flex flex-1 z-10 ">
+                    <div className={`animate-in fade-in zoom-in-80 duration-300  relative max-w-150 mx-auto px-4 py-12 w-full h-auto items-center transition-all flex flex-1 z-10`}>
                         <div className="absolute top-6 right-0 transition-all duration-300 ease-in-out  translate-y-1.5 cursor-pointer">
                             <button
                                 onClick={handleClose}
