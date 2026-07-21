@@ -62,10 +62,11 @@ export default function Create() {
                                 name="title"
                                 type='text'
                                 placeholder="Name of project"
-                                required />
+                                required
+                                aria-describedby="title-error" />
                         </label>
                         <div id="title-error" aria-live="polite" aria-atomic="true">
-                            {state.errors?.title?.map((error) => (
+                            {state.errors?.title && state.errors.title.map((error) => (
                                 <p key={error} className="mt-1 text-sm text-red-600">
                                     {error}
                                 </p>
@@ -76,9 +77,14 @@ export default function Create() {
                     <div>
                         <label htmlFor="description" className="block">
                             Description:
-                            <textarea id="description" name="description" placeholder="Description of project" className="w-full h-20 min-h-20 max-h-20 block" required />
+                            <textarea
+                                id="description"
+                                name="description"
+                                placeholder="Description of project"
+                                className="w-full h-20 min-h-20 max-h-20 block"
+                                required aria-describedby="description-error" />
                         </label>
-                        <div id="description-error" aria-live="polite" aria-atomic="true">
+                        <div id="description-error" aria-live="polite">
                             {state.errors?.description?.map((error) => (
                                 <p key={error} className="mt-1 text-sm text-red-600">
                                     {error}
@@ -90,13 +96,13 @@ export default function Create() {
                     <div>
                         <label htmlFor="type" >
                             Type:
-                            <select id="type" name="type" className="block" required defaultValue="">
+                            <select id="type" name="type" className="block" required defaultValue="" aria-describedby="type-error">
                                 <option value="" disabled>Select a project type:</option>
                                 <option value="opensource">Opensource</option>
                                 <option value="school">School</option>
                             </select>
                         </label>
-                        <div id="type-error" aria-live="polite" aria-atomic="true">
+                        <div id="type-error" aria-live="polite">
                             {state.errors?.type?.map((error) => (
                                 <p key={error} className="mt-1 text-sm text-red-600">
                                     {error}
@@ -108,6 +114,7 @@ export default function Create() {
                     <div>
                         <div className="flex flex-col">
                             <label htmlFor="technologies">Technologies:
+                                <input type="hidden" name="technologies" value={techs.join(',')} aria-describedby="technologies-error" />
                                 <div
                                     className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md bg-white min-h-10.5  transition-all cursor-text mt-2.5 focus-within:ring-2 focus-within:ring-gray-200"
                                     onClick={() => inputRef.current?.focus()}
@@ -126,8 +133,6 @@ export default function Create() {
                                             >
                                                 <X size={14} />
                                             </button>
-                                            {/* The hidden input ensures server-side form submission works */}
-                                            <input type="hidden" name="technologies" value={tech} />
                                         </span>
                                     ))}
                                     <input
@@ -144,7 +149,7 @@ export default function Create() {
                                 </div></label>
                             <p className="text-xs text-gray-500">Press Enter or comma to add a tag.</p>
                         </div>
-                        <div id="technologies-error" aria-live="polite" aria-atomic="true">
+                        <div id="technologies-error" aria-live="polite">
                             {state.errors?.technologies?.map((error) => (
                                 <p key={error} className="mt-1 text-sm text-red-600">
                                     {error}
@@ -156,9 +161,9 @@ export default function Create() {
                     <div>
                         <label htmlFor="link" >
                             Link:
-                            <input id="link" name="link" type="url" placeholder="Name of project" required />
+                            <input id="link" name="link" type="url" placeholder="Name of project" required aria-describedby="link-error" />
                         </label>
-                        <div id="link-error" aria-live="polite" aria-atomic="true">
+                        <div id="link-error" aria-live="polite">
                             {state.errors?.link?.map((error) => (
                                 <p key={error} className="mt-1 text-sm text-red-600">
                                     {error}
