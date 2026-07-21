@@ -4,6 +4,8 @@ import { X, Pencil } from "lucide-react";
 import { deleteProject } from "@/lib/action";
 import { useState } from "react";
 import Edit from "./EditModal";
+import SaveToast from "./StatusToast";
+
 
 
 export interface ProjectProps {
@@ -34,6 +36,9 @@ export default function ProjectCard(p: ProjectProps) {
     const [isDeleting, setIsDeleting] = useState(false);
     const [isRemoved, setIsRemoved] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
+    const [saveMessage, setSaveMessage] = useState("");
+    // const [editKey, setEditKey] = useState(0);
 
     const number = Number(p.id)
     const handleDelete = () => {
@@ -56,7 +61,32 @@ export default function ProjectCard(p: ProjectProps) {
     return (
         <div>
             <div>
-                <Edit isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} project={p} />
+                {isEditOpen && (
+                    <Edit isOpen={isEditOpen}
+                        onClose={() => {
+                            setIsEditOpen(false);
+                            // setEditKey(prev => prev + 1);
+                        }}
+                        onSaving={() => {
+                            setSaveStatus("saving");
+                        }}
+                        onSuccess={() => {
+                            setSaveStatus("success");
+                            setIsEditOpen(false)
+                            setTimeout(() => {
+                                setSaveStatus("idle");
+                            }, 2000);
+                        }}
+                        onError={(message) => {
+                            setSaveStatus("error");
+                            setSaveMessage(message);
+                            setTimeout(() => {
+                                setSaveStatus("idle");
+                            }, 3000);
+                        }}
+                        project={p}
+                    />
+                )}
             </div>
             <article
                 className={`group overflow-hidden relative border p-4 border-gray-600 bg-gray-50 rounded flex flex-col h-full transform transition-all duration-500 ease-in-out origin-center  ${isDeleting ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}>
@@ -106,7 +136,10 @@ export default function ProjectCard(p: ProjectProps) {
                     )}
                 </div>
             </article>
+            <SaveToast
+                status={saveStatus}
+                message={saveMessage}
+            />
         </div>
-
     )
 }

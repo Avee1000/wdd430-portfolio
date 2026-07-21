@@ -148,8 +148,6 @@ export async function deleteProject(id: number) {
 }
 
 export async function updateProject(id: string | number, prevState: State, formData: FormData): Promise<State> {
-
-
     const parsed = ProjectFormSchema.safeParse(getProjectData(formData));
 
     if (!parsed.success) {
@@ -180,5 +178,7 @@ export async function updateProject(id: string | number, prevState: State, formD
     revalidatePath('/projects/edit');
     return {
         message: 'Project updated successfully.',
+        errors: {},
+        success: true,
     };
 }

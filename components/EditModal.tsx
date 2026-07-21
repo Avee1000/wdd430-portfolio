@@ -3,12 +3,13 @@
 import { updateProject, type State } from "@/lib/action";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, KeyboardEvent, useRef, useActionState, useTransition } from "react";
-import { X, LoaderIcon, Check, AlertCircle } from "lucide-react";
+import { X, LoaderIcon, Check } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { ProjectProps } from "./EditProjects";
 
 const initialState: State = {
     message: null,
+    success: false,
     errors: {},
 };
 
@@ -16,6 +17,10 @@ interface EditModalProps {
     isOpen: boolean;
     onClose: () => void;
     project: ProjectProps;
+
+    onSaving: () => void;
+    onSuccess: () => void;
+    onError: (message: string) => void;
 }
 
 function Submit() {
@@ -23,15 +28,16 @@ function Submit() {
     return (
         <Button
             type={pending ? "button" : "submit"}
+            disabled={pending}
             variant="default"
-            className="bg-red-500 mt-3 text-black hover:bg-brand/90 cursor-pointer w-auto ml-auto"
+            className="bg-red-500 mt-3 text-black hover:bg-brand/90 cursor-pointer w-[20%] ml-auto"
         >
-            {pending ? <><LoaderIcon className="animate-spin" /> Processing</> : <><Check />Save Edit</>}
+            {pending ? <><LoaderIcon className="animate-spin" /></> : <><Check />Save Edit</>}
         </Button>
     )
 }
 
-export default function Edit({ isOpen, onClose, project }: EditModalProps) {
+export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, onError }: EditModalProps) {
     const [state, formAction] = useActionState(
         updateProject.bind(null, project.id),
         initialState
@@ -39,8 +45,6 @@ export default function Edit({ isOpen, onClose, project }: EditModalProps) {
 
     const [techs, setTechs] = useState<string[]>(project.technologies || []);
     const [input, setInput] = useState('');
-    const [isSaving, setIsSaving] = useState<'idle' | 'saving' | 'success' | 'error'>('idle');
-    const [isToastVisible, setIsToastVisible] = useState(false);
     const [isPending, startTransition] = useTransition();
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -49,35 +53,19 @@ export default function Edit({ isOpen, onClose, project }: EditModalProps) {
         if (!state.message && (!state.errors || Object.keys(state.errors).length === 0)) {
             return;
         }
-        if (state.success) {
-            onClose();
-        }
 
         if (state.errors && Object.keys(state.errors).length > 0) {
-            setIsSaving("error");
-            setIsToastVisible(true);
-
-            const timer = setTimeout(() => {
-                setIsToastVisible(false);
-                setTimeout(() => {
-                    setIsSaving("idle");
-                }, 300);
-            }, 2500);
-            return () => clearTimeout(timer);
+            onError(state.message || "Failed to updateProject");
+            return;
         }
-        onClose();
-        setIsSaving("success");
-        setIsToastVisible(true);
-        const timer = setTimeout(() => {
-            setIsToastVisible(false);
-            setTimeout(() => {
-                setIsSaving("idle");
-            }, 300);
-        }, 2000);
-        return () => clearTimeout(timer);
-    }, [state]);
 
-    if (!isOpen && isSaving === 'idle') return null;
+        if (state.success === true) {
+            onSuccess();
+        }
+
+    }, [state, onSuccess, onError]);
+
+    if (!isOpen) return null;
 
     const handleClose = () => {
         onClose();
@@ -85,8 +73,7 @@ export default function Edit({ isOpen, onClose, project }: EditModalProps) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsSaving('saving');
-        setIsToastVisible(true);
+        onSaving();
         const formData = new FormData(e.currentTarget);
         startTransition(() => {
             formAction(formData);
@@ -112,34 +99,6 @@ export default function Edit({ isOpen, onClose, project }: EditModalProps) {
 
     return (
         <>
-            {/* SAVING INDICATOR (Bottom Right) */}
-            {isSaving !== 'idle' && (
-                <div className={`fixed bottom-6 right-6 bg-gray-900 text-white shadow-xl px-5 py-3 rounded-lg flex justify-center items-center gap-3 z-20 transition-all duration-300 ease-out 
-                ${isToastVisible
-                        ? 'animate-in slide-in-from-bottom-100 opacity-100 '
-                        : 'animate-out opacity-0 translate-y-100 pointer-events-none'
-                    }`}>
-                    {isSaving === 'saving' && (
-                        <>
-                            <LoaderIcon className="animate-spin size-5 text-white" />
-                            <span className="font-medium text-sm">Saving project...</span>
-                        </>
-                    )}
-                    {isSaving === 'success' && (
-                        <>
-                            <Check className="size-5 text-green-500" />
-                            <span className="font-medium text-sm text-green-400">Project saved!</span>
-                        </>
-                    )}
-                    {isSaving === 'error' && (
-                        <>
-                            <AlertCircle className="size-5 text-red-500" />
-                            <span className="font-medium text-sm text-red-400">{state.message}</span>
-                        </>
-                    )}
-                </div>
-            )}
-
             {isOpen && (
                 <dialog
                     className="fixed inset-0 m-0 h-full w-full bg-black/80 flex justify-center items-center backdrop-blur-md z-11 p-4">
