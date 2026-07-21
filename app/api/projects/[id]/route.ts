@@ -19,7 +19,7 @@ export async function GET(
     }
 
     // 2. Lookup the project
-    const project = getProjectById(id);
+    const project =await getProjectById(id);
 
     // 3. Return 404 if project doesn't exist
     if (!project) {

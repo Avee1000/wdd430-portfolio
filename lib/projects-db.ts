@@ -25,8 +25,7 @@ export async function getProjects(type?: string | null): Promise<Project[]> {
 
 export async function getProjectById(id: number): Promise<Project | null> {
   const { rows } = await sql<Project>
-    `SELECT * FROM projects WHERE id = ${id}`;
+    `SELECT * FROM projects WHERE id = ${id} ORDER BY id` ;
   if (rows.length === 0) return null;
   return rows[0];
-  // return rows[0] ?? null;
 }
