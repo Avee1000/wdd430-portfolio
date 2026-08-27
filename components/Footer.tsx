@@ -1,8 +1,106 @@
-export default function Footer() {  
+import Link from "next/link";
+import { Mail } from "lucide-react";
+import { FaGithub as Github, FaLinkedin as Linkedin} from "react-icons/fa";
+
+
+
+const socialLinks = [
+  {
+    href: "https://github.com",
+    label: "GitHub",
+    Icon: Github,
+  },
+  {
+    href: "https://linkedin.com",
+    label: "LinkedIn",
+    Icon: Linkedin,
+  },
+  {
+    href: "mailto:hello@example.com",
+    label: "Email",
+    Icon: Mail,
+  },
+] as const;
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/resume", label: "Resume" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+export default function Footer() {
   return (
-    <footer className="bg-black border-t border-gray-200 g-black-800 text-white py-4 mt-12">
-      <div className="container mx-auto text-center">
-        <p>Copyright &copy; {new Date().getFullYear()} | OFI-S | All rights reserved</p>
+    <footer className="mt-24 border-t border-neutral-200 bg-white">
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <div className="grid gap-10 md:grid-cols-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="grid size-7 place-items-center rounded-md bg-neutral-900 text-xs font-bold text-white"
+              >
+                O
+              </span>
+              <span className="text-[15px] font-semibold tracking-tight text-neutral-900">
+                OFI‑S
+              </span>
+            </div>
+            <p className="mt-3 max-w-xs text-sm leading-relaxed text-neutral-500">
+              Software engineer building reliable, well‑designed products on
+              the modern web.
+            </p>
+          </div>
+
+          <nav aria-label="Footer">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+              Pages
+            </h3>
+            <ul className="mt-3 grid grid-cols-2 gap-2 text-sm">
+              {navLinks.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-neutral-600 transition-colors hover:text-neutral-900"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400">
+              Connect
+            </h3>
+            <ul className="mt-3 flex items-center gap-2">
+              {socialLinks.map(({ href, label, Icon }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel={href.startsWith("http") ? "noreferrer" : undefined}
+                    aria-label={label}
+                    className="inline-flex size-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900"
+                  >
+                    <Icon className="size-4" aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-neutral-200 pt-6 text-xs text-neutral-400 sm:flex-row sm:items-center">
+          <p>
+            © {new Date().getFullYear()} OFI‑S. All rights reserved.
+          </p>
+          <p className="font-mono tracking-tight">
+            Built with Next.js · TypeScript · Tailwind
+          </p>
+        </div>
       </div>
     </footer>
   );

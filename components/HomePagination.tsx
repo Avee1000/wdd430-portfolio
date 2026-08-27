@@ -1,40 +1,69 @@
-// Remove 'use client' entirely
-
-import { fetchProjectsPages } from "@/app/api/route"; 
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { fetchProjectsPages } from "@/app/api/route";
 
-export default async function Pagination(props: {
+interface PaginationProps {
   searchParams?: Promise<{ query?: string; page?: string }>;
-}) {
-  // Await the searchParams as you were doing
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
-  
-  const currentPage = Number(searchParams?.page) || 1;
+}
+
+export default async function Pagination({ searchParams }: PaginationProps) {
+  const params = (await searchParams) ?? {};
+  const query = params.query ?? "";
+  const currentPage = Math.max(1, Number(params.page) || 1);
   const pages = await fetchProjectsPages(query);
 
-  return (
-    <div className="flex flex-row justify-center items-center">
-      <div className="flex flex-row w-full">
-        {Array.from({ length: pages }).map((_, index) => {
-          const pageNumber = index + 1;
-          
-          // Check if the current loop iteration matches the active page
-          const isActive = currentPage === pageNumber;
+  if (!pages || pages <= 1) return null;
 
-          return (
-            <div key={index} className="page-box">
-              <Link 
-                // It's good practice to preserve the query string if one exists
-                href={`?page=${pageNumber}${query ? `&query=${query}` : ''}`} 
-                className={`flex items-center justify-center mx-1 size-10 text-center rounded-full ${
-                  isActive ? "bg-black text-white" : "bg-red-500 text-black"}`}>
-                {pageNumber}
-              </Link>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+  const pageHref = (n: number) =>
+    `?page=${n}${query ? `&query=${encodeURIComponent(query)}` : ""}`;
+
+  return (
+    <nav
+      aria-label="Pagination"
+      className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white p-1 shadow-sm"
+    >
+      <Link
+        aria-label="Previous page"
+        href={pageHref(Math.max(1, currentPage - 1))}
+        aria-disabled={currentPage <= 1}
+        className={cn(
+          "inline-flex size-9 items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900",
+          currentPage <= 1 && "pointer-events-none opacity-40"
+        )}
+      >
+        <ChevronLeft className="size-4" aria-hidden />
+      </Link>
+      {Array.from({ length: pages }).map((_, i) => {
+        const n = i + 1;
+        const active = currentPage === n;
+        return (
+          <Link
+            key={n}
+            href={pageHref(n)}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "inline-flex size-9 items-center justify-center rounded-full text-sm font-medium transition-colors",
+              active
+                ? "bg-neutral-900 text-white"
+                : "text-neutral-700 hover:bg-neutral-100"
+            )}
+          >
+            {n}
+          </Link>
+        );
+      })}
+      <Link
+        aria-label="Next page"
+        href={pageHref(Math.min(pages, currentPage + 1))}
+        aria-disabled={currentPage >= pages}
+        className={cn(
+          "inline-flex size-9 items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900",
+          currentPage >= pages && "pointer-events-none opacity-40"
+        )}
+      >
+        <ChevronRight className="size-4" aria-hidden />
+      </Link>
+    </nav>
   );
 }

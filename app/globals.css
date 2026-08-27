@@ -48,10 +48,6 @@
   --font-heading: var(--font-sans);
 }
 
-body {
-  box-sizing: border-box;
-}
-
 :root {
   --radius: 0.625rem;
   --card: oklch(1 0 0);
@@ -122,18 +118,70 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
-    @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  /* Default typographic rhythm */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold tracking-tight text-neutral-900;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  ::selection {
+    background: #0a0a0a;
+    color: white;
+  }
+
+  /* Subtle dotted focus ring used by interactive non-form elements */
+  :focus-visible {
+    outline: 2px solid #0a0a0a;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
-#userForm input, #userForm textarea, #userForm select{
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+  }
+
+  /* Quiet gradient grid used in hero background */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(10, 10, 10, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 10, 10, 0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse at top, black 50%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at top, black 50%, transparent 80%);
+  }
+}
+
+#userForm input,
+#userForm textarea,
+#userForm select {
   border: 1px solid black;
   border-color: black;
   border-radius: 5px;
@@ -141,6 +189,8 @@ body {
   width: 100%;
 }
 
-#userForm label>input, #userForm label>textarea, #userForm label>select{
-    margin-top: 10px;
+#userForm label > input,
+#userForm label > textarea,
+#userForm label > select {
+  margin-top: 10px;
 }

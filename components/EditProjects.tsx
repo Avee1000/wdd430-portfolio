@@ -1,6 +1,6 @@
 'use client'
 
-import { X, Pencil } from "lucide-react";
+import { X, Pencil, ArrowUpRight } from "lucide-react";
 import { deleteProject } from "@/lib/action";
 import { useState } from "react";
 import Edit from "./EditModal";
@@ -17,9 +17,9 @@ export interface ProjectProps {
     link?: string;
 }
 
-export async function DeleteProjects(id: any) {
-    await deleteProject(id);
-}
+// export async function DeleteProjects(id: any) {
+//     await deleteProject(id);
+// }
 
 export default function ProjectCard(p: ProjectProps) {
     // const article = useRef<HTMLElement>(null);
@@ -89,52 +89,72 @@ export default function ProjectCard(p: ProjectProps) {
                 )}
             </div>
             <article
-                className={`group overflow-hidden relative border p-4 border-gray-600 bg-gray-50 rounded flex flex-col h-full transform transition-all duration-500 ease-in-out origin-center  ${isDeleting ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}>
-                <div className="absolute top-3 right-3 flex flex-row-reverse gap-1.5 transition-all duration-300 ease-in-out opacity-0 translate-y-1.5 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto">
+                className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 shadow-[0_1px_0_0_rgba(10,10,10,0.02)] transition-all duration-300 ${isDeleting ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}`}>
+                <div className="absolute right-3 top-3 flex flex-row-reverse gap-1.5 transition-all duration-300 ease-out opacity-0 translate-y-1 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto">
                     <button
                         onClick={handleDelete}
                         disabled={isDeleting}
-                        className="bg-black size-8 rounded-full flex justify-center items-center cursor-pointer hover:bg-gray-800 transition-colors"
+                        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full bg-neutral-900 text-white transition-colors hover:bg-neutral-800"
                         aria-label="Delete Project"
                     >
-                        <X className="text-white size-5" />
+                        <X className="size-4" />
                     </button>
                     <button
                         onClick={() => setIsEditOpen(true)}
                         disabled={isEditOpen}
-                        className="bg-white size-8 shadow-md rounded-full flex justify-center items-center cursor-pointer hover:bg-gray-300 transition-colors"
+                        className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50"
                         aria-label="Edit Project"
                     >
-                        <Pencil className="text-black size-4" />
+                        <Pencil className="size-4" />
                     </button>
                 </div>
 
+                <header className="flex items-start gap-3">
+                    <span
+                        aria-hidden
+                        className="grid size-9 shrink-0 place-items-center rounded-lg bg-neutral-900 text-white"
+                    >
+                        <span className="font-mono text-xs font-bold">
+                            {p.title.charAt(0).toUpperCase()}
+                        </span>
+                    </span>
+                    <div className="min-w-0">
+                        <h3 className="truncate text-base font-semibold text-neutral-900">{p.title}</h3>
+                        <p className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+                            {p.type === 'opensource' ? 'Open source' : 'School'}
+                        </p>
+                    </div>
+                </header>
 
-                <h3 className=" text-black text-xl font-bold mb-2">{p.title}</h3>
-                <h2 className="text-gray-700 italic mb-2 h-auto">{p.description}</h2>
-                <p className="mt-auto text-sm text-gray-600 mb-3">{p.type}</p>
-                <ul className="mt-auto flex flex-wrap gap-2 mb-3"><strong>Technologies:</strong>
-                    {p.technologies.map((tech: string) => (
-                        <li
-                            key={tech}
-                            className=" px-3 py-1 bg-orange-200 text-gray-900 text-sm rounded-full"
-                        >
-                            {tech}
-                        </li>
-                    ))}
-                </ul>
-                <div className="mt-auto">
-                    {p.link && (
+                <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-neutral-600">
+                    {p.description}
+                </p>
+
+                {p.technologies?.length > 0 && (
+                    <ul className="mt-5 flex flex-wrap gap-1.5">
+                        {p.technologies.map((tech: string) => (
+                            <li key={tech}>
+                                <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 font-mono text-[11px] font-medium text-neutral-700">
+                                    {tech}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
+                {p.link && (
+                    <div className="mt-6 pt-2">
                         <a
                             href={p.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-2 flex h-12 text-white bg-black w-full items-center justify-center rounded border border-solid border-black px-5 transition-colors hover:border-black hover:text-gray-900 hover:bg-orange-100 dark:border-orange/[.145] dark:hover:bg-orange-100  md:w-39.5"
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-900 underline-offset-4 hover:underline"
                         >
-                            View Project
+                            View project
+                            <ArrowUpRight className="size-3.5" aria-hidden />
                         </a>
-                    )}
-                </div>
+                    </div>
+                )}
             </article>
             <SaveToast
                 status={saveStatus}

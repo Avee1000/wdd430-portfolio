@@ -1,22 +1,95 @@
-interface ProjectCardProps {
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export interface ProjectCardProps {
+  id?: string | number;
   title: string;
   description: string;
   technologies: string[];
+  type?: "opensource" | "school";
   link?: string;
+  className?: string;
 }
-        
-export default function ProjectCard({title, description, technologies, link}: ProjectCardProps) {
+
+export default function ProjectCard({
+  title,
+  description,
+  technologies,
+  type,
+  link,
+  className,
+}: ProjectCardProps) {
   return (
-    <article className="p-4 border border-gray-600 bg-gray-50 rounded">
-      <h3 className=" text-black text-xl font-bold mb-2">{title}</h3>
-      <p className="text-gray-700 mb-3">{description}</p>
-      <p className="text-sm text-gray-600 mb-3">
-        <strong>Technologies:</strong> {technologies.join(', ')}
+    <article
+      className={cn(
+        "group relative flex h-full flex-col rounded-2xl border border-neutral-200 bg-white p-6 shadow-[0_1px_0_0_rgba(10,10,10,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-[0_8px_24px_-12px_rgba(10,10,10,0.12)]",
+        className
+      )}
+    >
+      <header className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden
+            className="grid size-9 place-items-center rounded-lg bg-neutral-900 text-white"
+          >
+            <span className="font-mono text-xs font-bold">
+              {title.charAt(0).toUpperCase()}
+            </span>
+          </span>
+          <div className="min-w-0">
+            <h3 className="truncate text-base font-semibold text-neutral-900">
+              {title}
+            </h3>
+            {type && (
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-400">
+                {type === "opensource" ? "Open source" : "School"}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {link && (
+          <Link
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${title}`}
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition-colors group-hover:border-neutral-900 group-hover:text-neutral-900"
+          >
+            <ArrowUpRight className="size-4" aria-hidden />
+          </Link>
+        )}
+      </header>
+
+      <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-neutral-600">
+        {description}
       </p>
+
+      {technologies?.length > 0 && (
+        <ul className="mt-5 flex flex-wrap gap-1.5">
+          {technologies.map((tech) => (
+            <li key={tech}>
+              <span className="inline-flex items-center rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 font-mono text-[11px] font-medium text-neutral-700">
+                {tech}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
       {link && (
-        <p className="mt-2">
-          <a href={link} target="_blank" rel="noopener noreferrer" className="flex h-12 text-white bg-black w-full items-center justify-center rounded border border-solid border-black/8 px-5 transition-colors hover:border-black hover:text-gray-900 hover:bg-orange-100 dark:border-orange/[.145] dark:hover:bg-orange-100  md:w-39.5">View Project</a>
-        </p>
+        <div className="mt-6 pt-2">
+          <Link
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-900 underline-offset-4 hover:underline"
+          >
+            View project
+            <ArrowUpRight className="size-3.5" aria-hidden />
+          </Link>
+        </div>
       )}
     </article>
   );
