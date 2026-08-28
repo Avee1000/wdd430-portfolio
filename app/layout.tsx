@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import QueryProvider from "@/components/query-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -83,13 +84,15 @@ export default function RootLayout({
           Skip to main content
         </a>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <div className="flex min-h-0 flex-1 flex-col">
-            <Header />
-            <main id="main" className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
-              {children}
-              <Footer />
-            </main>
-          </div>
+          <QueryProvider>
+            <div className="flex min-h-0 flex-1 flex-col">
+              <Header />
+              <main id="main" className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
+                {children}
+                <Footer />
+              </main>
+            </div>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

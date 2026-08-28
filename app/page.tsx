@@ -1,4 +1,8 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -8,36 +12,51 @@ import {
 } from "lucide-react";
 import ProjectList from "@/components/ProjectList";
 import { ProjectSearch } from "@/components/ProjectSearch";
-import { fetchFilteredProjects, fetchProjectsPages } from "./api/route";
 import Pagination from "@/components/HomePagination";
-import { FaGithub as Github} from "react-icons/fa";
+import { FaGithub as Github } from "react-icons/fa";
 
+export default function Home() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") || "";
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const rawType = searchParams.get("type");
+  const type: "opensource" | "school" | undefined =
+    rawType === "opensource" || rawType === "school" ? rawType : undefined;
 
-export default async function Home(props: {
-  searchParams?: Promise<{ query?: string; page?: string; type?: string }>;
-}) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || "";
-  const currentPage = Number(searchParams?.page) || 1;
-  const type = searchParams?.type === "opensource" || searchParams?.type === "school" ? searchParams.type : undefined;
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["home-projects", query, currentPage, type],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.set("mode", "home");
+      if (query) params.set("query", query);
+      params.set("page", String(currentPage));
+      if (type) params.set("type", type);
 
-  const projects = await fetchFilteredProjects(query, currentPage, type);
-  const pages = await fetchProjectsPages(query, type);
+      const res = await fetch(`/api/projects?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch projects");
+      return res.json();
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 60,
+    retry: 1,
+  });
+
+  const projects = data?.projects ?? [];
+  const pages = data?.pages ?? 0;
 
   return (
     <div className="flex flex-col">
-      {/* Hero */}
       <section className="relative isolate overflow-hidden border-b border-neutral-200 bg-white">
         <div className="bg-grid absolute inset-0 -z-10" aria-hidden />
         <div className="container-page pt-16 pb-20 sm:pt-24 sm:pb-28">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/80 px-3 py-1 text-xs font-medium text-neutral-600 shadow-sm backdrop-blur">
+            {/* <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/80 px-3 py-1 text-xs font-medium text-neutral-600 shadow-sm backdrop-blur">
               <span className="relative flex size-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
               </span>
               Available for new opportunities · 2026
-            </span>
+            </span> */}
             <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight text-neutral-900 sm:text-5xl md:text-6xl">
               Engineering{" "}
               <span className="relative inline-block">
@@ -69,7 +88,7 @@ export default async function Home(props: {
                 Get in touch
               </Link>
               <Link
-                href="https://github.com"
+                href="https://github.com/Avee1000"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-full px-3 py-2.5 text-sm font-medium text-neutral-600 transition-colors hover:text-neutral-900"
@@ -81,12 +100,11 @@ export default async function Home(props: {
             </div>
           </div>
 
-          {/* Stat strip */}
-          <dl className="mx-auto mt-14 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 sm:grid-cols-4">
+          <dl className="mx-auto mt-14 grid max-w-220 grid-cols-2 gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 sm:grid-cols-4">
             {[
-              { k: "Projects shipped", v: "10+" },
-              { k: "Years coding", v: "3+" },
-              { k: "Primary stack", v: "Next.js" },
+              { k: "Projects shipped", v: "5+" },
+              { k: "Years coding", v: "2+" },
+              { k: "Primary stack", v: "Next.js/React, PostgreSQL/MongoDB, Node, Express, Python" },
               { k: "Status", v: "Open to work" },
             ].map((s) => (
               <div
@@ -96,7 +114,7 @@ export default async function Home(props: {
                 <dt className="text-xs font-medium uppercase tracking-wider text-neutral-500">
                   {s.k}
                 </dt>
-                <dd className="font-mono text-lg font-semibold text-neutral-900">
+                <dd className="font-mono text-lg  font-semibold text-neutral-900">
                   {s.v}
                 </dd>
               </div>
@@ -105,7 +123,6 @@ export default async function Home(props: {
         </div>
       </section>
 
-      {/* Featured work */}
       <section
         id="work"
         aria-labelledby="work-heading"
@@ -148,16 +165,42 @@ export default async function Home(props: {
           </div>
 
           <div className="mt-8">
-            <ProjectList projects={projects} />
+            {isLoading ? (
+              <section aria-label="Projects" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <article key={i} className="h-52 animate-pulse rounded-2xl border border-neutral-200 bg-white p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="size-9 rounded-lg bg-neutral-200" />
+                      <div className="space-y-2">
+                        <div className="h-4 w-32 rounded bg-neutral-200" />
+                        <div className="h-3 w-20 rounded bg-neutral-200" />
+                      </div>
+                    </div>
+                    <div className="mt-5 space-y-2">
+                      <div className="h-3 w-full rounded bg-neutral-200" />
+                      <div className="h-3 w-4/5 rounded bg-neutral-200" />
+                    </div>
+                  </article>
+                ))}
+              </section>
+            ) : error ? (
+              <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-12 text-center">
+                <p className="text-sm font-medium text-neutral-900">Unable to load projects</p>
+                <p className="mt-1 text-sm text-neutral-500">
+                  Something went wrong. Please check your connection and try again.
+                </p>
+              </div>
+            ) : (
+              <ProjectList projects={projects} />
+            )}
           </div>
 
           <div className="mt-10 flex justify-center">
-              <Pagination pages={pages} currentPage={currentPage} query={query} type={type} />
+            <Pagination pages={pages} currentPage={currentPage} query={query} type={type} />
           </div>
         </div>
       </section>
 
-      {/* Pillars / capabilities */}
       <section
         aria-labelledby="capabilities-heading"
         className="bg-white"

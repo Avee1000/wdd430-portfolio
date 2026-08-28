@@ -1,9 +1,5 @@
-import Projects from "@/components/projects/edit/EditPageComp";
+import EditClient from "./EditClient";
 
-export default async function Edit({
-  searchParams,
-}: {
-  searchParams?: Promise<{ page?: string }>;
-}) {
-  return <Projects searchParams={searchParams} />;
+export default function Edit() {
+  return <EditClient />;
 }

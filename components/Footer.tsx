@@ -6,17 +6,17 @@ import { FaGithub as Github, FaLinkedin as Linkedin} from "react-icons/fa";
 
 const socialLinks = [
   {
-    href: "https://github.com",
+    href: "https://github.com/Avee1000",
     label: "GitHub",
     Icon: Github,
   },
   {
-    href: "https://linkedin.com",
+    href: "https://www.linkedin.com/in/idahosa-eddy-a044551a6/",
     label: "LinkedIn",
     Icon: Linkedin,
   },
   {
-    href: "mailto:hello@example.com",
+    href: "mailto:flourish.idahosasunny@gmail.com",
     label: "Email",
     Icon: Mail,
   },
@@ -80,8 +80,8 @@ export default function Footer() {
                 <li key={href}>
                   <Link
                     href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel={href.startsWith("http") ? "noreferrer" : undefined}
+                    target={href.startsWith("https") ? "_blank" : undefined}
+                    rel={href.startsWith("https") ? "noreferrer" : undefined}
                     aria-label={label}
                     className="inline-flex size-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:border-neutral-900 hover:text-neutral-900"
                   >

@@ -132,7 +132,7 @@ export async function createProject(prevState: State, formData: FormData): Promi
 
     const { title, description, type, technologies, link } = parsed.data;
     try {
-        await sql`INSERT INTO projects (title, description, type, technologies, link) VALUES (${title}, ${description}, ${type}, ${technologies}::text[], ${link})`;
+        await sql`INSERT INTO projects (title, description, type, technologies, link) VALUES (${title}, ${description}, ${type}, ${technologies as unknown as string}::text[], ${link})`;
     } catch {
         return {
             message: 'Database Error: Failed to create project.'
@@ -140,6 +140,66 @@ export async function createProject(prevState: State, formData: FormData): Promi
     }
     revalidatePath('/projects');
     redirect('/projects');
+}
+
+const ContactSchema = z.object({
+    name: z.string().trim().min(2, "Name must be at least 2 characters.").max(100, "Name must be less than 100 characters."),
+    email: z.string().trim().email("Please enter a valid email address.").max(100, "Email must be less than 100 characters."),
+    subject: z.string().trim().min(2, "Subject is required.").max(150, "Subject must be less than 150 characters."),
+    message: z.string().trim().min(10, "Message must be at least 10 characters.").max(2000, "Message must be less than 2000 characters."),
+});
+
+export type ContactState = {
+    errors?: {
+        name?: string[];
+        email?: string[];
+        subject?: string[];
+        message?: string[];
+    };
+    message?: string | null;
+    success?: boolean;
+};
+
+export async function sendContactMessage(prevState: ContactState, formData: FormData): Promise<ContactState> {
+    const parsed = ContactSchema.safeParse({
+        name: String(formData.get("name") ?? ""),
+        email: String(formData.get("email") ?? ""),
+        subject: String(formData.get("subject") ?? ""),
+        message: String(formData.get("message") ?? ""),
+    });
+
+    if (!parsed.success) {
+        return {
+            errors: parsed.error.flatten().fieldErrors,
+            message: "Please fix the errors below.",
+        };
+    }
+
+    const { name, email, subject, message } = parsed.data;
+
+    try {
+        const apiKey = process.env.BREVO_API_KEY;
+        if (apiKey) {
+            const { BrevoClient } = await import("@getbrevo/brevo");
+            const client = new BrevoClient({ apiKey } as any); 
+            await (client.transactionalEmails as any).sendEmail({ 
+                sender: { email: "hello@example.com", name: "Portfolio Contact" },
+                to: [{ email: "hello@example.com" }],
+                subject: `Contact Form: ${subject}`,
+                htmlContent: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, "<br>")}</p>`,
+            });
+        }
+    } catch {
+        return {
+            message: "Failed to send message. Please try again later.",
+        };
+    }
+
+    return {
+        message: "Message sent successfully! I'll get back to you soon.",
+        success: true,
+        errors: {},
+    };
 }
 
 export async function deleteProject(id: number) {
@@ -165,7 +225,7 @@ export async function updateProject(id: string | number, prevState: State, formD
         title = ${title},
         description = ${description},
         type = ${type},
-        technologies = ${technologies}::text[],
+        technologies = ${technologies as unknown as string}::text[],
         link = ${link}
         WHERE id = ${id}`;
     } catch {

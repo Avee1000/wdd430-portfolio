@@ -1,22 +1,81 @@
-import { NextResponse, NextRequest } from "next/server";
-import { getProjects } from "@/lib/projects-db";   
+import { NextResponse } from "next/server";
+import { sql } from "@vercel/postgres";
+import type { Project } from "@/lib/projects-db";
 
-export async function GET(request: NextRequest) {
-  // 1. Get the URL from the request
+const ITEMS_PER_PAGE = 6;
+
+export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  
-  // 2. Extract the 'type' query parameter
-  const type = searchParams.get('type');
+  const query = searchParams.get("query") || "";
+  const page = Math.max(1, Number(searchParams.get("page")) || 1);
+  const type = searchParams.get("type") || undefined;
+  const mode = searchParams.get("mode") || "projects";
 
-  // 3. Call your service function
-  const projects = await getProjects(type ?? undefined);
+  const offset = (page - 1) * ITEMS_PER_PAGE;
+  const searchQuery = `%${query}%`;
+  const filterType = type || null;
 
-  // (optional) log the requested type
-  console.log('projects request type:', type);
+  if (mode === "home") {
+    const { rows: projects } = await sql<Project>`
+      SELECT * FROM projects
+      WHERE (title ILIKE ${searchQuery}
+         OR description ILIKE ${searchQuery}
+         OR technologies::text ILIKE ${searchQuery})
+        AND (${filterType}::text IS NULL OR type = ${filterType})
+      ORDER BY id
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
 
-      // Temporarily in your data fetch — remove after testing
-  // await new Promise(res => setTimeout(res, 50000));
+    const { rows: countRows } = await sql`
+      SELECT COUNT(*)
+        FROM projects
+        WHERE (title ILIKE ${searchQuery}
+           OR description ILIKE ${searchQuery}
+           OR technologies::text ILIKE ${searchQuery})
+          AND (${filterType}::text IS NULL OR type = ${filterType})
+    `;
 
-  // 4. Return as a JSON response
-  return NextResponse.json(projects);
+    const totalCount = Number(countRows[0].count);
+    const pages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+    return NextResponse.json({ projects, pages });
+  }
+
+  if (mode === "edit") {
+    const { rows: projects } = await sql<Project>`
+      SELECT * FROM projects
+      ORDER BY id
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    const { rows: countRows } = await sql`SELECT COUNT(*) FROM projects`;
+    const totalCount = Number(countRows[0].count);
+    const pages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+    return NextResponse.json({ projects, pages });
+  }
+
+  const { rows: projects } = await sql<Project>`
+    SELECT * FROM projects
+    WHERE title ILIKE ${searchQuery}
+       OR description ILIKE ${searchQuery}
+       OR type ILIKE ${searchQuery}
+       OR technologies::text ILIKE ${searchQuery}
+    ORDER BY id
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+  `;
+
+  const { rows: countRows } = await sql`
+    SELECT COUNT(*)
+      FROM projects
+      WHERE title ILIKE ${searchQuery}
+         OR description ILIKE ${searchQuery}
+         OR technologies::text ILIKE ${searchQuery}
+         OR type ILIKE ${searchQuery}
+  `;
+
+  const totalCount = Number(countRows[0].count);
+  const pages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  return NextResponse.json({ projects, pages });
 }

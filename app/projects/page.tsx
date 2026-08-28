@@ -1,24 +1,37 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import ProjectCard, { type ProjectCardProps as Project } from "@/components/ProjectCard";
-import { fetchFilteredSchoolProjects, fetchSchoolProjectsPages } from "@/app/api/route";
 import Pagination from "@/components/Pagination";
 import SearchInput from "@/components/SearchInput";
 
-async function getProjects(query: string, page: number): Promise<Project[]> {
-  return fetchFilteredSchoolProjects(query, page);
-}
+export default function Projects() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query") ?? "";
+  const page = Math.max(1, Number(searchParams.get("page")) || 1);
 
-export default async function Projects({
-  searchParams,
-}: {
-  searchParams?: Promise<{ query?: string; page?: string }>;
-}) {
-  const params = await searchParams;
-  const query = params?.query ?? "";
-  const page = Math.max(1, Number(params?.page) || 1);
-  const projects = await getProjects(query, page);
-  const pages = await fetchSchoolProjectsPages(query);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["school-projects", query, page],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+      params.set("mode", "projects");
+      if (query) params.set("query", query);
+      params.set("page", String(page));
+
+      const res = await fetch(`/api/projects?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to fetch projects");
+      return res.json();
+    },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 60,
+    retry: 1,
+  });
+
+  const projects = (data?.projects ?? []) as Project[];
+  const pages = data?.pages ?? 0;
 
   return (
     <div className="container-page py-16 sm:py-20">
@@ -55,11 +68,38 @@ export default async function Projects({
       </div>
 
       <section aria-label="All projects" className="mt-8">
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.id ?? project.title} {...project} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <article key={i} className="h-52 animate-pulse rounded-2xl border border-neutral-200 bg-white p-6">
+                <div className="flex items-center gap-3">
+                  <div className="size-9 rounded-lg bg-neutral-200" />
+                  <div className="space-y-2">
+                    <div className="h-4 w-32 rounded bg-neutral-200" />
+                    <div className="h-3 w-20 rounded bg-neutral-200" />
+                  </div>
+                </div>
+                <div className="mt-5 space-y-2">
+                  <div className="h-3 w-full rounded bg-neutral-200" />
+                  <div className="h-3 w-4/5 rounded bg-neutral-200" />
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-12 text-center">
+            <p className="text-sm font-medium text-neutral-900">Unable to load projects</p>
+            <p className="mt-1 text-sm text-neutral-500">
+              Something went wrong. Please check your connection and try again.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {projects.map((project) => (
+              <ProjectCard key={project.id ?? project.title} {...project} />
+            ))}
+          </div>
+        )}
       </section>
 
       <div className="mt-10 flex justify-center">
