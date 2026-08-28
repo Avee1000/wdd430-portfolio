@@ -1,18 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { fetchSchoolProjectsPages } from "@/app/api/route";
 
 interface PaginationProps {
-  searchParams?: Promise<{ query?: string; page?: string }>;
+  pages: number;
+  currentPage: number;
+  query?: string;
 }
 
-export default async function Pagination({ searchParams }: PaginationProps) {
-  const params = (await searchParams) ?? {};
-  const query = params.query ?? "";
-  const currentPage = Math.max(1, Number(params.page) || 1);
-  const pages = await fetchSchoolProjectsPages(query);
-
+export default function Pagination({ pages, currentPage, query = "" }: PaginationProps) {
   if (!pages || pages <= 1) return null;
 
   const pageHref = (n: number) =>

@@ -132,8 +132,8 @@ export async function createProject(prevState: State, formData: FormData): Promi
 
     const { title, description, type, technologies, link } = parsed.data;
     try {
-        await sql`INSERT INTO projects (title, description, type, technologies, link) VALUES (${title}, ${description}, ${type}, ${technologies as any}::text[], ${link})`;
-    } catch (error) {
+        await sql`INSERT INTO projects (title, description, type, technologies, link) VALUES (${title}, ${description}, ${type}, ${technologies}::text[], ${link})`;
+    } catch {
         return {
             message: 'Database Error: Failed to create project.'
         }
@@ -165,10 +165,10 @@ export async function updateProject(id: string | number, prevState: State, formD
         title = ${title},
         description = ${description},
         type = ${type},
-        technologies = ${technologies as any}::text[],
+        technologies = ${technologies}::text[],
         link = ${link}
         WHERE id = ${id}`;
-    } catch (error) {
+    } catch {
         // throw new Error("Failed to update project.");
         return {
             message: 'Database Error: Failed to create project.'

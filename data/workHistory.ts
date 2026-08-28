@@ -12,7 +12,7 @@ export const workHistory: Work[] = [
     title: "Quality Assurance Agent",
     company: "BYU-Pathway Worldwide - Springboard",
     startDate: "September 2025",
-    endDate: "February 2026",
+    endDate: "July 2026",
     description: [
       "Validate Academic Exception cases to ensure deadline accuracy, documentation completeness, and policy compliance.",
       "Review case documentation for correct deadlines, submission date, term alignment, and exception types.",

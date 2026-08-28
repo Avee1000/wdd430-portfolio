@@ -1,47 +1,105 @@
+"use client";
+
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { fetchProjectsPages } from "@/app/api/route";
 
 interface PaginationProps {
-  searchParams?: Promise<{ query?: string; page?: string; type?: string }>;
+  pages: number;
+  currentPage: number;
+  query?: string;
+  type?: string;
+  hrefPrefix?: string;
 }
 
-export default async function Pagination({ searchParams }: PaginationProps) {
-  const params = (await searchParams) ?? {};
-  const query = params.query ?? "";
-  const type = params.type === "opensource" || params.type === "school" ? params.type : undefined;
-  const currentPage = Math.max(1, Number(params.page) || 1);
-  const pages = await fetchProjectsPages(query, type);
-
+export default function Pagination({
+  pages,
+  currentPage,
+  query = "",
+  type = "",
+  hrefPrefix = "/",
+}: PaginationProps) {
   if (!pages || pages <= 1) return null;
 
-  const pageHref = (n: number) =>
-    `/?page=${n}${query ? `&query=${encodeURIComponent(query)}` : ""}${type ? `&type=${type}` : ""}#work`;
+  // Safe URL generator that correctly handles existing query parameters
+  const pageHref = (n: number) => {
+    const hasParams = hrefPrefix.includes("?");
+    const separator = hasParams ? "&" : "?";
+    const params = new URLSearchParams();
+
+    params.set("page", n.toString());
+    if (query.trim()) params.set("query", query.trim());
+    if (type.trim()) params.set("type", type.trim());
+
+    // If hrefPrefix already has query params, append using '&'
+    if (hasParams) {
+      return `${hrefPrefix}&${params.toString()}`;
+    }
+    return `${hrefPrefix}?${params.toString()}`;
+  };
+
+  // Helper to generate a truncated page list with dynamic ranges
+  const getVisiblePages = () => {
+    const total = pages;
+    const current = currentPage;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    if (current <= 4) {
+      return [1, 2, 3, 4, 5, "...", total];
+    }
+
+    if (current >= total - 3) {
+      return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
+    }
+
+    return [1, "...", current - 1, current, current + 1, "...", total];
+  };
+
+  const isFirstPage = currentPage <= 1;
+  const isLastPage = currentPage >= pages;
 
   return (
     <nav
       aria-label="Pagination"
       className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-white p-1 shadow-sm"
     >
+      {/* Previous Button */}
       <Link
         aria-label="Previous page"
-        href={pageHref(Math.max(1, currentPage - 1))}
-        aria-disabled={currentPage <= 1}
+        href={isFirstPage ? "#" : pageHref(Math.max(1, currentPage - 1))}
+        aria-disabled={isFirstPage}
+        tabIndex={isFirstPage ? -1 : undefined}
         className={cn(
           "inline-flex size-9 items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900",
-          currentPage <= 1 && "pointer-events-none opacity-40"
+          isFirstPage && "pointer-events-none opacity-40"
         )}
       >
         <ChevronLeft className="size-4" aria-hidden />
       </Link>
-      {Array.from({ length: pages }).map((_, i) => {
-        const n = i + 1;
-        const active = currentPage === n;
+
+      {/* Page Numbers */}
+      {getVisiblePages().map((page, idx) => {
+        if (page === "...") {
+          return (
+            <span
+              key={`ellipsis-${idx}`}
+              className="inline-flex size-9 items-center justify-center text-neutral-400"
+            >
+              <MoreHorizontal className="size-4" aria-hidden />
+            </span>
+          );
+        }
+
+        const pageNum = page as number;
+        const active = currentPage === pageNum;
+
         return (
           <Link
-            key={n}
-            href={pageHref(n)}
+            key={pageNum}
+            href={pageHref(pageNum)}
             aria-current={active ? "page" : undefined}
             className={cn(
               "inline-flex size-9 items-center justify-center rounded-full text-sm font-medium transition-colors",
@@ -50,17 +108,20 @@ export default async function Pagination({ searchParams }: PaginationProps) {
                 : "text-neutral-700 hover:bg-neutral-100"
             )}
           >
-            {n}
+            {pageNum}
           </Link>
         );
       })}
+
+      {/* Next Button */}
       <Link
         aria-label="Next page"
-        href={pageHref(Math.min(pages, currentPage + 1))}
-        aria-disabled={currentPage >= pages}
+        href={isLastPage ? "#" : pageHref(Math.min(pages, currentPage + 1))}
+        aria-disabled={isLastPage}
+        tabIndex={isLastPage ? -1 : undefined}
         className={cn(
           "inline-flex size-9 items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900",
-          currentPage >= pages && "pointer-events-none opacity-40"
+          isLastPage && "pointer-events-none opacity-40"
         )}
       >
         <ChevronRight className="size-4" aria-hidden />

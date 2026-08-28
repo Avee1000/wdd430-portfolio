@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -9,10 +8,9 @@ import {
 } from "lucide-react";
 import ProjectList from "@/components/ProjectList";
 import { ProjectSearch } from "@/components/ProjectSearch";
-import { fetchFilteredProjects } from "./api/route";
+import { fetchFilteredProjects, fetchProjectsPages } from "./api/route";
 import Pagination from "@/components/HomePagination";
-import { Spinner } from "@/components/ui/spinner";
-import { FaGithub as Github, FaLinkedin as Linkedin} from "react-icons/fa";
+import { FaGithub as Github} from "react-icons/fa";
 
 
 export default async function Home(props: {
@@ -24,6 +22,7 @@ export default async function Home(props: {
   const type = searchParams?.type === "opensource" || searchParams?.type === "school" ? searchParams.type : undefined;
 
   const projects = await fetchFilteredProjects(query, currentPage, type);
+  const pages = await fetchProjectsPages(query, type);
 
   return (
     <div className="flex flex-col">
@@ -153,13 +152,7 @@ export default async function Home(props: {
           </div>
 
           <div className="mt-10 flex justify-center">
-            <Suspense
-              fallback={
-                <Spinner data-icon="inline-end" className="text-neutral-900" />
-              }
-            >
-              <Pagination searchParams={props.searchParams} />
-            </Suspense>
+              <Pagination pages={pages} currentPage={currentPage} query={query} type={type} />
           </div>
         </div>
       </section>

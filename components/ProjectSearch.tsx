@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { Search, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
@@ -11,16 +11,7 @@ export function ProjectSearch() {
   const pathname = usePathname();
   const { replace } = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [value, setValue] = useState(
-    searchParams.get("query")?.toString() ?? ""
-  );
-
-  // Keep controlled value in sync if URL changes externally
-  useEffect(() => {
-    const external = searchParams.get("query")?.toString() ?? "";
-    if (external !== value) setValue(external);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  const initial = searchParams.get("query")?.toString() ?? "";
 
   const pushQuery = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -40,27 +31,24 @@ export function ProjectSearch() {
         <Search className="size-4" aria-hidden />
       </div>
       <input
+        key={initial}
         ref={inputRef}
         type="search"
         inputMode="search"
+        defaultValue={initial}
         placeholder="Search projects by name, tech, or description…"
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          pushQuery(e.target.value);
-        }}
+        onChange={(e) => pushQuery(e.target.value)}
         aria-label="Search projects"
         className={cn(
           "h-11 w-full rounded-full border border-neutral-200 bg-white pl-10 pr-10 text-sm text-neutral-900 placeholder:text-neutral-400",
           "transition-colors focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
         )}
       />
-      {value && (
+      {initial && (
         <button
           type="button"
           aria-label="Clear search"
           onClick={() => {
-            setValue("");
             pushQuery("");
             inputRef.current?.focus();
           }}

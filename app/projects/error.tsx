@@ -16,10 +16,10 @@ export default function Error({
     }, [error]);
 
     return (
-        <div className='flex-1 justify-self-center items-center flex'>
-            <div className="mx-auto mt-16 max-w-xl rounded-lg border border-slate-200 bg-white p-6 text-center shadow-sm">
-                <h1 className="text-2xl font-bold text-slate-900">Something went wrong!</h1>
-                <p className="mt-3 text-slate-600">
+        <div className='flex-1 min-h-dvh justify-self-center items-center flex'>
+            <div className="mx-auto max-w-xl rounded-lg border border-muted-foreground bg-white p-6 text-center shadow-sm">
+                <h1 className="text-2xl font-bold ">Something went wrong!</h1>
+                <p className="mt-3 text-muted-foreground">
                     {error.message || "An unexpected error occurred. Please try again later."}
                 </p>
 
@@ -33,7 +33,7 @@ export default function Error({
 
                     <Link
                         href="/projects"
-                        className="rounded-md border border-slate-300 px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-50"
+                        className="rounded-md border border-slate-300 px-4 py-2 font-semibold  transition hover:bg-"
                     >
                         Go Back to Projects
                     </Link>

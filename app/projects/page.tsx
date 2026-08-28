@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import ProjectCard, { type ProjectCardProps as Project } from "@/components/ProjectCard";
-import { fetchFilteredSchoolProjects } from "@/app/api/route";
+import { fetchFilteredSchoolProjects, fetchSchoolProjectsPages } from "@/app/api/route";
 import Pagination from "@/components/Pagination";
 import SearchInput from "@/components/SearchInput";
 
@@ -18,6 +18,7 @@ export default async function Projects({
   const query = params?.query ?? "";
   const page = Math.max(1, Number(params?.page) || 1);
   const projects = await getProjects(query, page);
+  const pages = await fetchSchoolProjectsPages(query);
 
   return (
     <div className="container-page py-16 sm:py-20">
@@ -62,7 +63,7 @@ export default async function Projects({
       </section>
 
       <div className="mt-10 flex justify-center">
-        <Pagination searchParams={searchParams} />
+        <Pagination pages={pages} currentPage={page} query={query} />
       </div>
     </div>
   );

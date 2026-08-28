@@ -4,7 +4,7 @@ import { X, Pencil, ArrowUpRight } from "lucide-react";
 import { deleteProject } from "@/lib/action";
 import { useState } from "react";
 import Edit from "./EditModal";
-import SaveToast from "./StatusToast";
+import SaveToast from "../../StatusToast";
 
 
 
@@ -36,57 +36,47 @@ export default function ProjectCard(p: ProjectProps) {
     const [isDeleting, setIsDeleting] = useState(false);
     const [isRemoved, setIsRemoved] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [editKey, setEditKey] = useState(0);
     const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
     const [saveMessage, setSaveMessage] = useState("");
     // const [editKey, setEditKey] = useState(0);
 
     const number = Number(p.id)
     const handleDelete = () => {
-        // 1. Trigger the visual animation (scale to 0, fade out)
         setIsDeleting(true);
-        // 2. Wait for the 500ms CSS transition to finish
         setTimeout(() => {
-            // 3. Instantly remove it from the DOM so surrounding elements collapse the gap
             setIsRemoved(true);
-            // 4. Fire the server action in the background (fire and forget)
             deleteProject(number).catch(err => {
                 console.error("Failed to delete project:", err);
-                // Optional: if it fails, you could set isRemoved(false) and isDeleting(false) to bring it back
             });
         }, 500);
     }
-    // Once the timer finishes, render nothing so the space is completely freed up
     if (isRemoved) return null;
 
     return (
         <div>
             <div>
-                {isEditOpen && (
-                    <Edit isOpen={isEditOpen}
-                        onClose={() => {
-                            setIsEditOpen(false);
-                            // setEditKey(prev => prev + 1);
-                        }}
-                        onSaving={() => {
-                            setSaveStatus("saving");
-                        }}
-                        onSuccess={() => {
-                            setSaveStatus("success");
-                            setIsEditOpen(false)
-                            setTimeout(() => {
-                                setSaveStatus("idle");
-                            }, 2000);
-                        }}
-                        onError={(message) => {
-                            setSaveStatus("error");
-                            setSaveMessage(message);
-                            setTimeout(() => {
-                                setSaveStatus("idle");
-                            }, 3000);
-                        }}
-                        project={p}
-                    />
-                )}
+                <Edit
+                    key={editKey}
+                    isOpen={isEditOpen}
+                    onClose={() => setIsEditOpen(false)}
+                    onSaving={() => setSaveStatus("saving")}
+                    onSuccess={() => {
+                        setSaveStatus("success");
+                        setIsEditOpen(false)
+                        setTimeout(() => {
+                            setSaveStatus("idle");
+                        }, 2000);
+                    }}
+                    onError={(message) => {
+                        setSaveStatus("error");
+                        setSaveMessage(message);
+                        setTimeout(() => {
+                            setSaveStatus("idle");
+                        }, 3000);
+                    }}
+                    project={p}
+                />
             </div>
             <article
                 className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 shadow-[0_1px_0_0_rgba(10,10,10,0.02)] transition-all duration-300 ${isDeleting ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}`}>
@@ -100,7 +90,10 @@ export default function ProjectCard(p: ProjectProps) {
                         <X className="size-4" />
                     </button>
                     <button
-                        onClick={() => setIsEditOpen(true)}
+                        onClick={() => {
+                            setEditKey((k) => k + 1);
+                            setIsEditOpen(true);
+                        }}
                         disabled={isEditOpen}
                         className="inline-flex size-9 cursor-pointer items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-900 shadow-sm transition-colors hover:bg-neutral-50"
                         aria-label="Edit Project"

@@ -11,6 +11,7 @@ interface SearchInputProps {
   placeholder?: string;
   className?: string;
   actionPath?: string;
+  onSearch?: (query: string) => void; // 1. Changed from string to a callback function
 }
 
 export default function SearchInput({
@@ -18,6 +19,7 @@ export default function SearchInput({
   placeholder = "Search projects...",
   className,
   actionPath = "/projects/edit",
+  onSearch
 }: SearchInputProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,9 +42,19 @@ export default function SearchInput({
 
   const handleClear = () => {
     setQuery("");
+    if (onSearch) onSearch(""); // Clear parent data as well if needed
     startTransition(() => {
       router.push(actionPath);
     });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setQuery(value);
+    
+    if (onSearch) {
+      onSearch(value);
+    }
   };
 
   return (
@@ -56,7 +68,7 @@ export default function SearchInput({
           type="text"
           name="query"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={handleChange}
           placeholder={placeholder}
           className="h-10 w-full rounded-full border border-neutral-200 bg-white pl-10 pr-16 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
         />

@@ -1,9 +1,6 @@
-import DeleteProjects from "@/components/EditProjects";
-import { ProjectProps } from "@/components/projects";
-import { fetchFilteredSchoolProjects } from "@/app/api/route";
+import DeleteProjects, { ProjectProps } from "@/components/projects/edit/EditProjects";
+import { fetchFilteredSchoolProjects, fetchSchoolProjectsPages } from "@/app/api/route";
 import Pagination from "@/components/Pagination";
-import { Suspense } from "react";
-import { Spinner } from "@/components/ui/spinner";
 
 
 type PageProps = {
@@ -33,6 +30,10 @@ async function ProjectList(props: PageProps) {
 }
 
 export default async function Projects(props: { searchParams?: Promise<{ query?: string; page?: string }>; }) {
+    const searchParams = await props.searchParams;
+    const query = searchParams?.query ?? "";
+    const currentPage = Math.max(1, Number(searchParams?.page) || 1);
+    const pages = await fetchSchoolProjectsPages(query);
 
     return (
         <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 sm:px-6 lg:px-8">
@@ -40,7 +41,7 @@ export default async function Projects(props: { searchParams?: Promise<{ query?:
                 <ProjectList searchParams={props.searchParams} />
             </div>
             <div className="flex w-full justify-center my-8">
-                <Pagination searchParams={props.searchParams} />
+                <Pagination pages={pages} currentPage={currentPage} query={query} />
             </div>
         </main>
     );
