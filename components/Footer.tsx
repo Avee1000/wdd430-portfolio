@@ -1,8 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import { FaGithub as Github, FaLinkedin as Linkedin} from "react-icons/fa";
-
-
+import { FaGithub as Github, FaLinkedin as Linkedin } from "react-icons/fa";
+import { useAuth } from "@/components/auth-provider";
+import { usePathname } from "next/navigation";
 
 const socialLinks = [
   {
@@ -22,15 +24,20 @@ const socialLinks = [
   },
 ] as const;
 
-const navLinks = [
+const publicNavLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
   { href: "/resume", label: "Resume" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
 export default function Footer() {
+  const { isAuthenticated } = useAuth();
+  const pathname = usePathname();
+  const authRoutes = pathname === "/signup" || pathname === "/login";
+
+  if (authRoutes) return null;
+
   return (
     <footer className="border-t border-neutral-200 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -48,8 +55,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-neutral-500">
-              Software engineer building reliable, well‑designed products on
-              the modern web.
+              Software engineer building reliable, well‑designed products on the
+              modern web.
             </p>
           </div>
 
@@ -58,7 +65,7 @@ export default function Footer() {
               Pages
             </h3>
             <ul className="mt-3 grid grid-cols-2 gap-2 text-sm">
-              {navLinks.map((item) => (
+              {publicNavLinks.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -68,6 +75,16 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              {!isAuthenticated && (
+                <li>
+                  <Link
+                    href="/login"
+                    className="text-neutral-600 transition-colors hover:text-neutral-900"
+                  >
+                    Admin login
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
 
@@ -94,9 +111,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-2 border-t border-neutral-200 pt-6 text-xs text-neutral-400 sm:flex-row sm:items-center">
-          <p>
-            © {new Date().getFullYear()} OFI‑S. All rights reserved.
-          </p>
+          <p>© {new Date().getFullYear()} OFI‑S. All rights reserved.</p>
           <p className="font-mono tracking-tight">
             Built with Next.js · TypeScript · Tailwind
           </p>

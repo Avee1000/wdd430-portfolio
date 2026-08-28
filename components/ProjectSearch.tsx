@@ -18,7 +18,7 @@ export function ProjectSearch() {
     params.set("page", "1");
     if (term) params.set("query", term);
     else params.delete("query");
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}#work`);
   }, 300);
 
   return (
@@ -41,7 +41,7 @@ export function ProjectSearch() {
         aria-label="Search projects"
         className={cn(
           "h-11 w-full rounded-full border border-neutral-200 bg-white pl-10 pr-10 text-sm text-neutral-900 placeholder:text-neutral-400",
-          "transition-colors focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+          "transition-colors focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 [&::-webkit-search-cancel-button]:appearance-none [&::-ms-clear]:hidden"
         )}
       />
       {initial && (

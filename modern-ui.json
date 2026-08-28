@@ -1,0 +1,20 @@
+{
+  "style": "default",
+  "path": "components/modern-ui",
+  "theme": "default",
+  "typescript": true,
+  "tailwind": true,
+  "framework": "next",
+  "components": [
+    {
+      "name": "sonner",
+      "version": "latest",
+      "installedAt": "2026-08-28T22:08:08.264Z"
+    }
+  ],
+  "aliases": {
+    "cn": "@/lib/utils",
+    "hook": "@/hooks"
+  },
+  "tailwindVersion": "v4"
+}

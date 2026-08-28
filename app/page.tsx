@@ -3,13 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Code2,
-  Activity,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, Code2, Activity, Zap } from "lucide-react";
 import ProjectList from "@/components/ProjectList";
 import { ProjectSearch } from "@/components/ProjectSearch";
 import Pagination from "@/components/HomePagination";
@@ -104,7 +98,10 @@ export default function Home() {
             {[
               { k: "Projects shipped", v: "5+" },
               { k: "Years coding", v: "2+" },
-              { k: "Primary stack", v: "Next.js/React, PostgreSQL/MongoDB, Node, Express, Python" },
+              {
+                k: "Primary stack",
+                v: "Next.js/React, PostgreSQL/MongoDB, Node, Express, Python",
+              },
               { k: "Status", v: "Open to work" },
             ].map((s) => (
               <div
@@ -142,8 +139,8 @@ export default function Home() {
                 Recent projects
               </h2>
               <p className="mt-2 max-w-xl text-sm text-neutral-600">
-                A live snapshot from the database. Search, filter, or browse
-                the latest work below.
+                A live snapshot from the database. Search, filter, or browse the
+                latest work below.
               </p>
             </div>
             <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs text-neutral-500 shadow-sm">
@@ -154,21 +151,42 @@ export default function Home() {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <ProjectSearch />
-            <nav aria-label="Filter projects" className="flex shrink-0 gap-1 rounded-full border border-neutral-200 bg-white p-1">
-              {[{ label: "All", value: "" }, { label: "Open source", value: "opensource" }, { label: "School", value: "school" }].map((filter) => {
+            <nav
+              aria-label="Filter projects"
+              className="flex shrink-0 gap-1 rounded-full border border-neutral-200 bg-white p-1"
+            >
+              {[
+                { label: "All", value: "" },
+                { label: "Open source", value: "opensource" },
+                { label: "School", value: "school" },
+              ].map((filter) => {
                 const params = new URLSearchParams();
                 if (filter.value) params.set("type", filter.value);
                 if (query) params.set("query", query);
-                return <Link key={filter.label} href={`/?${params.toString()}#work`} className={`rounded-full px-3 py-1.5 text-xs font-medium ${type === filter.value || (!type && !filter.value) ? "bg-neutral-900 text-white" : "text-neutral-500 hover:bg-neutral-100"}`}>{filter.label}</Link>;
+                return (
+                  <Link
+                    key={filter.label}
+                    href={`/?${params.toString()}#work`}
+                    className={`rounded-full px-3 py-1.5 text-xs font-medium ${type === filter.value || (!type && !filter.value) ? "bg-neutral-900 text-white" : "text-neutral-500 hover:bg-neutral-100"}`}
+                  >
+                    {filter.label}
+                  </Link>
+                );
               })}
             </nav>
           </div>
 
           <div className="mt-8">
             {isLoading ? (
-              <section aria-label="Projects" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <section
+                aria-label="Projects"
+                className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3"
+              >
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <article key={i} className="h-52 animate-pulse rounded-2xl border border-neutral-200 bg-white p-6">
+                  <article
+                    key={i}
+                    className="h-52 animate-pulse rounded-2xl border border-neutral-200 bg-white p-6"
+                  >
                     <div className="flex items-center gap-3">
                       <div className="size-9 rounded-lg bg-neutral-200" />
                       <div className="space-y-2">
@@ -185,9 +203,12 @@ export default function Home() {
               </section>
             ) : error ? (
               <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-12 text-center">
-                <p className="text-sm font-medium text-neutral-900">Unable to load projects</p>
+                <p className="text-sm font-medium text-neutral-900">
+                  Unable to load projects
+                </p>
                 <p className="mt-1 text-sm text-neutral-500">
-                  Something went wrong. Please check your connection and try again.
+                  Something went wrong. Please check your connection and try
+                  again.
                 </p>
               </div>
             ) : (
@@ -196,15 +217,17 @@ export default function Home() {
           </div>
 
           <div className="mt-10 flex justify-center">
-            <Pagination pages={pages} currentPage={currentPage} query={query} type={type} />
+            <Pagination
+              pages={pages}
+              currentPage={currentPage}
+              query={query}
+              type={type}
+            />
           </div>
         </div>
       </section>
 
-      <section
-        aria-labelledby="capabilities-heading"
-        className="bg-white"
-      >
+      <section aria-labelledby="capabilities-heading" className="bg-white">
         <div className="container-page py-16 sm:py-20">
           <div className="mx-auto max-w-2xl text-center">
             <h2
@@ -236,10 +259,7 @@ export default function Home() {
                 key={c.title}
                 className="group rounded-2xl border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-300"
               >
-                <Zap
-                  className="size-5 text-neutral-900"
-                  aria-hidden
-                />
+                <Zap className="size-5 text-neutral-900" aria-hidden />
                 <h3 className="mt-4 text-base font-semibold text-neutral-900">
                   {c.title}
                 </h3>

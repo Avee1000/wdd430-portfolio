@@ -4,6 +4,8 @@ import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { readSessionToken } from "@/lib/auth";
 
 const ProjectFormSchema = z.object({
 
@@ -117,7 +119,24 @@ function getProjectData(
 }
 
 
+export async function requireAdmin() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("session")?.value ?? null;
+
+  if (!token) {
+    redirect("/login");
+  }
+
+  const session = await readSessionToken(token);
+  if (!session) {
+    redirect("/login");
+  }
+
+  return session;
+}
+
 export async function createProject(prevState: State, formData: FormData): Promise<State> {
+  await requireAdmin();
 
     const parsed = ProjectFormSchema.safeParse(getProjectData(formData));
     // if (!parsed.success) {
@@ -203,11 +222,13 @@ export async function sendContactMessage(prevState: ContactState, formData: Form
 }
 
 export async function deleteProject(id: number) {
-    await sql`DELETE FROM projects WHERE id = ${id}`;
-    revalidatePath('/projects');
+  await requireAdmin();
+  await sql`DELETE FROM projects WHERE id = ${id}`;
+  revalidatePath('/projects');
 }
 
 export async function updateProject(id: string | number, prevState: State, formData: FormData): Promise<State> {
+  await requireAdmin();
     const parsed = ProjectFormSchema.safeParse(getProjectData(formData));
 
     if (!parsed.success) {

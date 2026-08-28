@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/components/auth-provider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import QueryProvider from "@/components/query-provider";
+import { SonnerGlobal } from "@/components/modern-ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -73,25 +75,42 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable,
         inter.variable,
-        "font-sans"
+        "font-sans",
       )}
     >
-      <body suppressHydrationWarning className="flex h-dvh flex-col overflow-hidden">
+      <body
+        suppressHydrationWarning
+        className="flex h-dvh flex-col overflow-hidden"
+      >
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-[#0a0a0a] focus:px-3 focus:py-2 focus:text-sm focus:text-white"
         >
           Skip to main content
         </a>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+        >
           <QueryProvider>
-            <div className="flex min-h-0 flex-1 flex-col">
-              <Header />
-              <main id="main" className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
-                {children}
-                <Footer />
-              </main>
-            </div>
+            <AuthProvider>
+              <div className="flex min-h-0 flex-1 flex-col">
+                <Header />
+                <main
+                  id="main"
+                  className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden"
+                >
+                  {children}
+                  <Footer />
+                </main>
+                <SonnerGlobal 
+                  position="top-right"
+                  className="bg-background! text-foreground! border-border!"
+                  duration={2000}
+                />
+              </div>
+            </AuthProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

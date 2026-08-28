@@ -3,22 +3,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X, ArrowUpRight, Pencil, Plus } from "lucide-react";
+import { Menu, X, ArrowUpRight, Pencil, Plus, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/ThemeToggle";
+import { useAuth } from "@/components/auth-provider";
 
-const navItems = [
+const publicNavItems = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
   { href: "/resume", label: "Resume" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
 export default function Header() {
   const pathname = usePathname();
+  const { isAuthenticated, user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const authRoutes = pathname === "/signup" || pathname === "/login"
 
   useEffect(() => {
     const main = document.getElementById("main");
@@ -29,7 +31,6 @@ export default function Header() {
     return () => main.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll while mobile sheet is open
   useEffect(() => {
     if (open) {
       const prev = document.body.style.overflow;
@@ -40,15 +41,26 @@ export default function Header() {
     }
   }, [open]);
 
-  // Close menu on route change
   useEffect(() => {
     if (!open) return;
     const closeMenu = window.setTimeout(() => setOpen(false), 0);
     return () => window.clearTimeout(closeMenu);
   }, [pathname, open]);
 
+  const handleLogout = async () => {
+    await logout();
+    setOpen(false);
+  };
+
+  const navItems = isAuthenticated
+    ? [...publicNavItems, { href: "/projects", label: "Projects" }]
+    : publicNavItems;
+
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isProjectsPage = pathname.startsWith("/projects");
+  
+  if (authRoutes) return null;
 
   return (
     <header
@@ -103,15 +115,7 @@ export default function Header() {
                 </li>
               );
             })}
-            <li className="ml-2 shrink-0">
-              <Link
-                href="/contact"
-                className="flex w-auto items-center gap-1 rounded-full bg-neutral-900 dark:bg-neutral-50 dark:text-neutral-900 px-3.5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800 whitespace-nowrap"
-              >
-                Hire me <ArrowUpRight className="size-3.5" aria-hidden />
-              </Link>
-            </li>
-            {pathname.startsWith("/projects") && (
+            {isAuthenticated && isProjectsPage && (
               <>
                 <li className="ml-2 shrink-0 border-l border-border pl-3">
                   <Link href="/projects/create" className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-foreground whitespace-nowrap">
@@ -124,6 +128,28 @@ export default function Header() {
                   </Link>
                 </li>
               </>
+            )}
+            {isAuthenticated && (
+              <li className="ml-2 shrink-0 border-l border-border pl-3 flex items-center gap-2">
+                <span className="text-sm text-neutral-600">{user?.email}</span>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-foreground hover:bg-muted whitespace-nowrap"
+                >
+                  <LogOut className="size-3.5" aria-hidden />
+                  Sign out
+                </button>
+              </li>
+            )}
+            {!isAuthenticated && (
+              <li className="ml-2 shrink-0 border-l border-border pl-3">
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 px-3.5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800 whitespace-nowrap"
+                >
+                  Sign in <ArrowUpRight className="size-3.5" aria-hidden />
+                </Link>
+              </li>
             )}
             <li className="ml-2 shrink-0 border-l border-border pl-3">
               <ThemeToggle />
@@ -185,7 +211,7 @@ export default function Header() {
               );
             })}
           </ul>
-          {pathname.startsWith("/projects") && (
+          {isAuthenticated && isProjectsPage && (
             <div className="mt-4 grid grid-cols-2 gap-2 px-3">
               <Link href="/projects/create" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border px-3 py-2 text-sm font-medium text-foreground">
                 <Plus className="size-3.5" aria-hidden />Create
@@ -199,6 +225,17 @@ export default function Header() {
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Theme</span>
             <ThemeToggle />
           </div>
+          {isAuthenticated && (
+            <div className="mt-4 px-3">
+              <button
+                onClick={handleLogout}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-border px-3 py-3 text-base font-medium text-foreground hover:bg-muted"
+              >
+                <LogOut className="size-4" aria-hidden />
+                Sign out
+              </button>
+            </div>
+          )}
           <p className="mt-4 px-3 text-xs text-neutral-400">
             Press <kbd className="rounded border border-neutral-200 px-1.5 py-0.5">Esc</kbd> to close.
           </p>
