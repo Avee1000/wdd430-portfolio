@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -74,21 +75,22 @@ export default function RootLayout({
         "font-sans"
       )}
     >
-      <body
-        suppressHydrationWarning
-        className="flex min-h-screen flex-col bg-[#fafafa] text-[#0a0a0a] selection:bg-[#0a0a0a] selection:text-white"
-      >
+      <body suppressHydrationWarning className="flex h-dvh flex-col overflow-hidden">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-[#0a0a0a] focus:px-3 focus:py-2 focus:text-sm focus:text-white"
         >
           Skip to main content
         </a>
-        <Header />
-        <main id="main" className="flex-1 w-full">
-          {children}
-        </main>
-        <Footer />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <div className="flex min-h-0 flex-1 flex-col">
+            <Header />
+            <main id="main" className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden">
+              {children}
+              <Footer />
+            </main>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

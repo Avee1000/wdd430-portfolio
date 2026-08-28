@@ -4,19 +4,20 @@ import { cn } from "@/lib/utils";
 import { fetchProjectsPages } from "@/app/api/route";
 
 interface PaginationProps {
-  searchParams?: Promise<{ query?: string; page?: string }>;
+  searchParams?: Promise<{ query?: string; page?: string; type?: string }>;
 }
 
 export default async function Pagination({ searchParams }: PaginationProps) {
   const params = (await searchParams) ?? {};
   const query = params.query ?? "";
+  const type = params.type === "opensource" || params.type === "school" ? params.type : undefined;
   const currentPage = Math.max(1, Number(params.page) || 1);
-  const pages = await fetchProjectsPages(query);
+  const pages = await fetchProjectsPages(query, type);
 
   if (!pages || pages <= 1) return null;
 
   const pageHref = (n: number) =>
-    `?page=${n}${query ? `&query=${encodeURIComponent(query)}` : ""}`;
+    `/?page=${n}${query ? `&query=${encodeURIComponent(query)}` : ""}${type ? `&type=${type}` : ""}#work`;
 
   return (
     <nav

@@ -1,5 +1,4 @@
-import ProjectCard from "@/components/projects";
-import { ProjectProps as pro } from "@/components/projects";
+import { redirect } from "next/navigation";
 
 async function getProjects() {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
@@ -21,14 +20,5 @@ export function ProjectList({ projects }: { projects: pro[] }) {
 }
 
 export default async function Projects() {
-    const projects = await getProjects();
-
-    return (
-        <main className="max-w-4xl mx-auto px-4 py-12 flex-1 w-full">
-            <section className="text-center py-6">
-                <h1 className="text-black text-4xl font-bold mb-4">My Projects</h1>
-            </section>
-            <ProjectList projects={projects} />
-        </main>
-    );
+  redirect("/?type=opensource#work");
 }

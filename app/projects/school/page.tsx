@@ -1,7 +1,4 @@
-import { Suspense } from 'react';
-import ProjectCard from "@/components/projects";
-import { ProjectProps as pro } from "@/components/projects";
-import SchoolProjectList from "@/components/ui/school-project-list";
+import { redirect } from "next/navigation";
 
 async function getProjects() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
@@ -28,14 +25,5 @@ async function FetchedProjectList() {
 }
 
 export default async function Projects() {
-  return (
-    <main className="max-w-4xl mx-auto px-4 py-12 flex-1 w-full">
-      <section className="text-center py-4">
-        <h1 className="text-black text-4xl font-bold mb-4">My Projects</h1>
-      </section>
-      <Suspense fallback={<SchoolProjectList />}>
-        <FetchedProjectList />            
-      </Suspense>
-    </main>
-  );
+  redirect("/?type=school#work");
 }

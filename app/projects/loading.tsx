@@ -1,27 +1,8 @@
 ﻿export default function Loading() {
   return (
-    <main className="max-w-4xl mx-auto px-4 py-12 animate-pulse flex-1">
-      <section className="space-y-4 mb-10">
-        <div className="h-10 w-3/5 rounded-md bg-slate-200" />
-        <div className="h-4 w-full rounded-md bg-slate-200" />
-        <div className="h-4 w-5/6 rounded-md bg-slate-200" />
-      </section>
-
-      <section className="grid gap-4 md:grid-cols-2">
-        {Array.from({ length: 6 }).map((_, index) => (
-          <article key={index} className="space-y-4  space-x-10 rounded-3xl bg-slate-200 p-6">
-            <div className="h-6 w-2/3 rounded-md bg-slate-300" />
-            <div className="h-4 w-full rounded-md bg-slate-300" />
-            <div className="h-4 w-4/5 rounded-md bg-slate-300" />
-            <div className="flex flex-wrap gap-2">
-              <div className="h-8 w-20 rounded-full bg-slate-300" />
-              <div className="h-8 w-16 rounded-full bg-slate-300" />
-              <div className="h-8 w-24 rounded-full bg-slate-300" />
-            </div>
-            <div className="h-10 w-full rounded-full bg-slate-300" />
-          </article>
-        ))}
-      </section>
+    <main className="container-page flex-1 py-12 sm:py-20" role="status" aria-label="Loading projects">
+      <section className="mx-auto animate-pulse space-y-4 text-center"><div className="mx-auto h-3 w-20 rounded bg-muted" /><div className="mx-auto h-9 w-2/3 max-w-md rounded bg-muted" /><div className="mx-auto h-4 w-4/5 max-w-xl rounded bg-muted" /><div className="mx-auto h-10 w-56 rounded-full bg-muted" /></section>
+      <section className="mt-12 animate-pulse"><div className="mb-5 flex justify-between"><div className="h-3 w-24 rounded bg-muted" /><div className="h-3 w-20 rounded bg-muted" /></div><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{Array.from({ length: 6 }).map((_, index) => <article key={index} className="h-52 rounded-2xl border border-border bg-card p-6"><div className="flex items-center gap-3"><div className="size-9 rounded-lg bg-muted" /><div className="space-y-2"><div className="h-4 w-32 rounded bg-muted" /><div className="h-3 w-20 rounded bg-muted" /></div></div><div className="mt-5 space-y-2"><div className="h-3 w-full rounded bg-muted" /><div className="h-3 w-4/5 rounded bg-muted" /></div></article>)}</div></section>
     </main>
   );
 }

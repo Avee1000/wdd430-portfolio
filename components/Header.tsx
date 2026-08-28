@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, Pencil, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -20,10 +21,12 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const main = document.getElementById("main");
+    if (!main) return;
+    const onScroll = () => setScrolled(main.scrollTop > 8);
     onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    main.addEventListener("scroll", onScroll, { passive: true });
+    return () => main.removeEventListener("scroll", onScroll);
   }, []);
 
   // Lock body scroll while mobile sheet is open
@@ -39,8 +42,10 @@ export default function Header() {
 
   // Close menu on route change
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    if (!open) return;
+    const closeMenu = window.setTimeout(() => setOpen(false), 0);
+    return () => window.clearTimeout(closeMenu);
+  }, [pathname, open]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -48,11 +53,11 @@ export default function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full border-b border-transparent bg-white/80 backdrop-blur-md transition-colors",
-        scrolled && "border-neutral-200/80"
+        "relative z-40 w-full shrink-0 border-b border-transparent bg-background/80 backdrop-blur-md transition-colors",
+        scrolled && "border-border"
       )}
     >
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="group inline-flex items-center gap-2 rounded-md font-semibold tracking-tight text-neutral-900"
@@ -106,6 +111,8 @@ export default function Header() {
                 Hire me <ArrowUpRight className="size-3.5" aria-hidden />
               </Link>
             </li>
+            {pathname.startsWith("/projects") && <><li className="ml-2 border-l border-border pl-3"><Link href="/projects/create" className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-foreground"><Plus className="size-3.5" aria-hidden />Create</Link></li><li><Link href="/projects/edit" className="inline-flex items-center gap-1.5 rounded-full bg-foreground px-3 py-1.5 text-sm font-medium text-background"><Pencil className="size-3.5" aria-hidden />Edit</Link></li></>}
+            <li className="ml-2 border-l border-border pl-3"><ThemeToggle /></li>
           </ul>
         </nav>
 
@@ -116,7 +123,7 @@ export default function Header() {
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex size-10 items-center justify-center rounded-md border border-neutral-200 bg-white text-neutral-900 transition-colors hover:bg-neutral-50 md:hidden"
+          className="inline-flex size-10 items-center justify-center rounded-md border border-border bg-background text-foreground transition-colors hover:bg-muted md:hidden"
         >
           {open ? (
             <X className="size-5" aria-hidden />
@@ -130,7 +137,7 @@ export default function Header() {
       <div
         id="mobile-nav"
         className={cn(
-          "md:hidden overflow-hidden border-t border-neutral-200 bg-white transition-[max-height,opacity] duration-300 ease-out",
+          "md:hidden overflow-hidden border-t border-border bg-background transition-[max-height,opacity] duration-300 ease-out",
           open ? "max-h-[480px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
@@ -163,6 +170,8 @@ export default function Header() {
               );
             })}
           </ul>
+          {pathname.startsWith("/projects") && <div className="mt-4 grid grid-cols-2 gap-2 px-3"><Link href="/projects/create" className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border px-3 py-2 text-sm font-medium text-foreground"><Plus className="size-3.5" aria-hidden />Create</Link><Link href="/projects/edit" className="inline-flex items-center justify-center gap-1.5 rounded-full bg-foreground px-3 py-2 text-sm font-medium text-background"><Pencil className="size-3.5" aria-hidden />Edit</Link></div>}
+          <div className="mt-4 flex items-center justify-between px-3"><span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Theme</span><ThemeToggle /></div>
           <p className="mt-4 px-3 text-xs text-neutral-400">
             Press <kbd className="rounded border border-neutral-200 px-1.5 py-0.5">Esc</kbd> to close.
           </p>

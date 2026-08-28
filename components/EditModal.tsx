@@ -6,6 +6,8 @@ import { useState, useEffect, KeyboardEvent, useRef, useActionState, useTransiti
 import { X, LoaderIcon, Check } from "lucide-react";
 import { useFormStatus } from "react-dom";
 import { ProjectProps } from "./EditProjects";
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const initialState: State = {
     message: null,
@@ -30,7 +32,7 @@ function Submit() {
             type={pending ? "button" : "submit"}
             disabled={pending}
             variant="default"
-            className="bg-red-500 mt-3 text-black hover:bg-brand/90 cursor-pointer w-[20%] ml-auto"
+            className="mt-3 ml-auto w-auto bg-foreground text-background hover:opacity-85"
         >
             {pending ? <><LoaderIcon className="animate-spin" /></> : <><Check />Save Edit</>}
         </Button>
@@ -44,6 +46,7 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
     );
 
     const [techs, setTechs] = useState<string[]>(project.technologies || []);
+    const [type, setType] = useState<ProjectProps["type"]>(project.type);
     const [input, setInput] = useState('');
     const [isPending, startTransition] = useTransition();
     const inputRef = useRef<HTMLInputElement>(null);
@@ -98,30 +101,31 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
     };
 
     return (
-        <>
-            {isOpen && (
-                <dialog
-                    className="fixed inset-0 m-0 h-full w-full bg-black/80 flex justify-center items-center backdrop-blur-md z-11 p-4">
-                    <div className="animate-in fade-in zoom-in-80 duration-300 relative max-w-150 mx-auto px-4 py-12 w-full h-auto items-center flex flex-1 z-10">
+        <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()} showSwipeHandle>
+            <DrawerContent className="max-h-[92dvh] rounded-none">
+                <DrawerHeader className="mx-auto w-full max-w-2xl px-6 pb-4 sm:px-10">
+                    <DrawerTitle>Edit project</DrawerTitle>
+                    <DrawerDescription>Update the project details below.</DrawerDescription>
+                </DrawerHeader>
+                <div className="relative mx-auto max-h-[calc(92dvh-6rem)] w-full max-w-2xl overflow-y-auto px-6 pb-8 sm:px-10">
                         <div className="absolute top-6 right-0 transition-all duration-300 ease-in-out translate-y-1.5 cursor-pointer">
                             <button
                                 onClick={handleClose}
-                                className="bg-black size-8 rounded-full flex justify-center items-center cursor-pointer hover:bg-gray-800 transition-colors"
+                                className="inline-flex size-9 items-center justify-center rounded-full bg-foreground text-background transition-colors hover:opacity-80"
                                 aria-label="Exit Edit"
                             >
                                 <X className="text-white size-5" />
                             </button>
                         </div>
-                        <div className="p-4 border border-gray-600 bg-gray-50 rounded shrink-0 w-full h-full">
                             <form
                                 onSubmit={handleSubmit}
                                 id='userForm'
-                                className="flex flex-col gap-4"
+                                className="flex flex-col gap-5 text-foreground"
                             >
                                 <div>
-                                    <label htmlFor="title" className="block">
-                                        Title:
-                                        <input id="title" name="title" type='text' defaultValue={project.title} placeholder="Name of project" />
+                                    <label htmlFor="title" className="block text-sm font-medium">
+                                        <span className="block">Title</span>
+                                        <input id="title" name="title" type='text' defaultValue={project.title} placeholder="Name of project" className="mt-2.5 h-11 w-full rounded-xl border border-input bg-background px-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
                                     </label>
                                     <div id="title-error" aria-live="polite" aria-atomic="true">
                                         {state.errors?.title?.map((error) => (
@@ -133,9 +137,9 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
                                 </div>
 
                                 <div>
-                                    <label htmlFor="description" className="block">
-                                        Description:
-                                        <textarea id="description" name="description" placeholder="Description of project" defaultValue={project.description} className="w-full h-20 min-h-20 max-h-20 block" />
+                                    <label htmlFor="description" className="block text-sm font-medium">
+                                        <span className="block">Description</span>
+                                        <textarea id="description" name="description" placeholder="Description of project" defaultValue={project.description} className="mt-2.5 block min-h-28 w-full resize-y rounded-xl border border-input bg-background px-3 py-2.5 text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
                                     </label>
                                     <div id="description-error" aria-live="polite" aria-atomic="true">
                                         {state.errors?.description?.map((error) => (
@@ -147,13 +151,13 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
                                 </div>
 
                                 <div>
-                                    <label htmlFor="type">
-                                        Type:
-                                        <select id="type" name="type" className="block" defaultValue={project.type}>
-                                            <option value="" disabled>Select a project type:</option>
-                                            <option value="opensource">Opensource</option>
-                                            <option value="school">School</option>
-                                        </select>
+                                    <label htmlFor="type" className="block text-sm font-medium">
+                                        <span>Project type</span>
+                                        <input type="hidden" name="type" value={type} />
+                                        <Select value={type} onValueChange={(value) => value && setType(value as ProjectProps["type"])}>
+                                            <SelectTrigger id="type" className="mt-2.5 h-11 w-full rounded-xl bg-background"><SelectValue placeholder="Select a project type" /></SelectTrigger>
+                                            <SelectContent><SelectItem value="opensource">Open source</SelectItem><SelectItem value="school">School</SelectItem></SelectContent>
+                                        </Select>
                                     </label>
                                     <div id="type-error" aria-live="polite" aria-atomic="true">
                                         {state.errors?.type?.map((error) => (
@@ -166,15 +170,15 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
 
                                 <div>
                                     <div className="flex flex-col">
-                                        <label htmlFor="technologies">Technologies:
+                                        <label htmlFor="technologies" className="text-sm font-medium"><span>Technologies</span>
                                             <div
-                                                className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md bg-white min-h-10.5 transition-all cursor-text mt-2.5 focus-within:ring-2 focus-within:ring-gray-200"
+                                                className="mt-2.5 flex min-h-11 cursor-text flex-wrap gap-2 rounded-xl border border-input bg-background p-2.5 focus-within:ring-2 focus-within:ring-ring/20"
                                                 onClick={() => inputRef.current?.focus()}
                                             >
                                                 {techs.map((tech) => (
                                                     <span
                                                         key={tech}
-                                                        className="flex items-center gap-1 bg-gray-200 text-gray-800 px-2 py-1 rounded text-sm font-medium"
+                                                        className="flex items-center gap-1 rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-medium text-foreground"
                                                     >
                                                         {tech}
                                                         <button
@@ -191,7 +195,7 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
                                                 <input
                                                     ref={inputRef}
                                                     type="text"
-                                                    className="flex-1 outline-none min-w-30 bg-transparent"
+                                                    className="min-w-30 flex-1 bg-transparent px-1 outline-none placeholder:text-muted-foreground"
                                                     placeholder={techs.length < 3 ? "e.g. React, Next.js..." : ""}
                                                     value={input}
                                                     onChange={(e) => setInput(e.target.value)}
@@ -200,7 +204,7 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
                                                 />
                                             </div>
                                         </label>
-                                        <p className="text-xs text-gray-500">Press Enter or comma to add a tag.</p>
+                                        <p className="mt-2 text-xs text-muted-foreground">Press Enter or comma to add a tag.</p>
                                     </div>
                                     <div id="technologies-error" aria-live="polite" aria-atomic="true">
                                         {state.errors?.technologies?.map((error) => (
@@ -212,9 +216,9 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
                                 </div>
 
                                 <div>
-                                    <label htmlFor="link">
-                                        Link:
-                                        <input id="link" name="link" type="url" defaultValue={project.link} placeholder="Link to project" />
+                                    <label htmlFor="link" className="block text-sm font-medium">
+                                        <span className="block">Project link</span>
+                                        <input id="link" name="link" type="url" defaultValue={project.link} placeholder="https://github.com/..." className="mt-2.5 h-11 w-full rounded-xl border border-input bg-background px-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20" />
                                     </label>
                                     <div id="link-error" aria-live="polite" aria-atomic="true">
                                         {state.errors?.link?.map((error) => (
@@ -227,10 +231,8 @@ export default function Edit({ isOpen, onClose, project, onSaving, onSuccess, on
 
                                 <Submit />
                             </form>
-                        </div>
-                    </div>
-                </dialog>
-            )}
-        </>
+                </div>
+            </DrawerContent>
+        </Drawer>
     )
 }

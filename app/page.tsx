@@ -4,7 +4,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Code2,
-  Sparkles,
+  Activity,
   Zap,
 } from "lucide-react";
 import ProjectList from "@/components/ProjectList";
@@ -16,13 +16,14 @@ import { FaGithub as Github, FaLinkedin as Linkedin} from "react-icons/fa";
 
 
 export default async function Home(props: {
-  searchParams?: Promise<{ query?: string; page?: string }>;
+  searchParams?: Promise<{ query?: string; page?: string; type?: string }>;
 }) {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
+  const type = searchParams?.type === "opensource" || searchParams?.type === "school" ? searchParams.type : undefined;
 
-  const projects = await fetchFilteredProjects(query, currentPage);
+  const projects = await fetchFilteredProjects(query, currentPage, type);
 
   return (
     <div className="flex flex-col">
@@ -44,7 +45,7 @@ export default async function Home(props: {
                 <span className="relative z-10">reliable</span>
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 bottom-1 -z-0 h-3 bg-neutral-200/70 sm:h-4"
+                  className="absolute inset-x-0 bottom-1 z-0 h-3 bg-neutral-200/70 sm:h-4"
                 />
               </span>{" "}
               web products end‑to‑end.
@@ -109,7 +110,7 @@ export default async function Home(props: {
       <section
         id="work"
         aria-labelledby="work-heading"
-        className="border-b border-neutral-200 bg-[#fafafa]"
+        className="border-b border-neutral-200 bg-background"
       >
         <div className="container-page py-16 sm:py-20">
           <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
@@ -130,13 +131,21 @@ export default async function Home(props: {
               </p>
             </div>
             <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs text-neutral-500 shadow-sm">
-              <Sparkles className="size-3.5" aria-hidden />
+              <Activity className="size-3.5" aria-hidden />
               <span>Updated continuously</span>
             </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <ProjectSearch />
+            <nav aria-label="Filter projects" className="flex shrink-0 gap-1 rounded-full border border-neutral-200 bg-white p-1">
+              {[{ label: "All", value: "" }, { label: "Open source", value: "opensource" }, { label: "School", value: "school" }].map((filter) => {
+                const params = new URLSearchParams();
+                if (filter.value) params.set("type", filter.value);
+                if (query) params.set("query", query);
+                return <Link key={filter.label} href={`/?${params.toString()}#work`} className={`rounded-full px-3 py-1.5 text-xs font-medium ${type === filter.value || (!type && !filter.value) ? "bg-neutral-900 text-white" : "text-neutral-500 hover:bg-neutral-100"}`}>{filter.label}</Link>;
+              })}
+            </nav>
           </div>
 
           <div className="mt-8">

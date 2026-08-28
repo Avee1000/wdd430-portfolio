@@ -35,11 +35,11 @@ async function ProjectList(props: PageProps) {
 export default async function Projects(props: { searchParams?: Promise<{ query?: string; page?: string }>; }) {
 
     return (
-        <main className="max-w-4xl mx-auto px-4 py-12 flex-1 w-full">
-            <div className="py-5">
-            <ProjectList searchParams={props.searchParams} />
+        <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 sm:px-6 lg:px-8">
+            <div className="flex-1 py-5">
+                <ProjectList searchParams={props.searchParams} />
             </div>
-            <div className="w-full flex justify-center my-8">
+            <div className="flex w-full justify-center my-8">
                 <Pagination searchParams={props.searchParams} />
             </div>
         </main>

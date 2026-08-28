@@ -1,25 +1,25 @@
 export default function Loading() {
   return (
     <div
-      className="container-page py-16 sm:py-20"
+      className="container-page min-h-[900px] py-16 sm:py-20"
       role="status"
       aria-label="Loading about"
     >
       <section className="mx-auto mb-12 max-w-3xl animate-pulse space-y-4 text-center">
-        <div className="mx-auto h-3 w-24 rounded-full bg-neutral-200" />
-        <div className="mx-auto h-9 w-2/3 rounded-md bg-neutral-200" />
-        <div className="mx-auto h-4 w-4/5 rounded-md bg-neutral-200" />
+        <div className="mx-auto h-3 w-24 rounded-full bg-muted" />
+        <div className="mx-auto h-9 w-2/3 rounded-md bg-muted" />
+        <div className="mx-auto h-4 w-4/5 rounded-md bg-muted" />
       </section>
       <section className="grid gap-4 sm:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="animate-pulse rounded-2xl border border-neutral-200 bg-white p-6"
+            className="animate-pulse rounded-2xl border border-border bg-card p-6"
           >
-            <div className="size-5 rounded bg-neutral-200" />
-            <div className="mt-4 h-4 w-1/2 rounded bg-neutral-200" />
-            <div className="mt-2 h-3 w-full rounded bg-neutral-200" />
-            <div className="mt-1 h-3 w-4/5 rounded bg-neutral-200" />
+            <div className="size-5 rounded bg-muted" />
+            <div className="mt-4 h-4 w-1/2 rounded bg-muted" />
+            <div className="mt-2 h-3 w-full rounded bg-muted" />
+            <div className="mt-1 h-3 w-4/5 rounded bg-muted" />
           </div>
         ))}
       </section>
@@ -27,19 +27,19 @@ export default function Loading() {
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="animate-pulse rounded-2xl border border-neutral-200 bg-white p-6"
+            className="animate-pulse rounded-2xl border border-border bg-card p-6"
           >
             <div className="flex items-center justify-between">
               <div className="space-y-2">
-                <div className="h-3 w-24 rounded bg-neutral-200" />
-                <div className="h-4 w-40 rounded bg-neutral-200" />
-                <div className="h-3 w-32 rounded bg-neutral-200" />
+                <div className="h-3 w-24 rounded bg-muted" />
+                <div className="h-4 w-40 rounded bg-muted" />
+                <div className="h-3 w-32 rounded bg-muted" />
               </div>
-              <div className="size-9 rounded-lg bg-neutral-200" />
+              <div className="size-9 rounded-lg bg-muted" />
             </div>
             <div className="mt-4 space-y-2">
-              <div className="h-3 w-full rounded bg-neutral-200" />
-              <div className="h-3 w-5/6 rounded bg-neutral-200" />
+              <div className="h-3 w-full rounded bg-muted" />
+              <div className="h-3 w-5/6 rounded bg-muted" />
             </div>
           </div>
         ))}

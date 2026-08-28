@@ -34,7 +34,7 @@ export function ProjectSearch() {
     <form
       role="search"
       onSubmit={(e) => e.preventDefault()}
-      className="relative w-full"
+      className="relative w-full sm:max-w-md"
     >
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400">
         <Search className="size-4" aria-hidden />

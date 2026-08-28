@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Code2, GraduationCap, Sparkles, User } from "lucide-react";
+import { ArrowRight, Code2, GraduationCap, Lightbulb, User } from "lucide-react";
 import WorkList from "@/components/WorkList";
 import type { Work } from "@/data/workHistory";
 import { workHistory } from "@/data/workHistory";
@@ -18,7 +18,7 @@ const highlights = [
     body: "Currently deepening distributed systems and platform engineering.",
   },
   {
-    Icon: Sparkles,
+    Icon: Lightbulb,
     title: "Craft‑minded",
     body: "I sweat accessibility, performance, and the small details that compound.",
   },

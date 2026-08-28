@@ -4,6 +4,7 @@ import { fetchFilteredSchoolProjects } from "@/app/api/route";
 import Pagination from "@/components/Pagination";
 import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import SearchInput from "@/components/SearchInput";
 
 
 type PageProps = {
@@ -33,13 +34,18 @@ async function ProjectList(props: PageProps) {
 }
 
 export default async function Projects(props: { searchParams?: Promise<{ query?: string; page?: string }>; }) {
+    const searchParams = await props.searchParams;
+    const query = searchParams?.query || '';
 
     return (
-        <main className="max-w-4xl mx-auto px-4 py-12 flex-1 w-full">
-            <div className="py-5">
-            <ProjectList searchParams={props.searchParams} />
+        <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mb-8 w-full max-w-md">
+                <SearchInput defaultValue={query} placeholder="Search projects to edit..." />
             </div>
-            <div className="w-full flex justify-center my-8">
+            <div className="flex-1 py-5">
+                <ProjectList searchParams={props.searchParams} />
+            </div>
+            <div className="flex w-full justify-center my-8">
                 <Pagination searchParams={props.searchParams} />
             </div>
         </main>

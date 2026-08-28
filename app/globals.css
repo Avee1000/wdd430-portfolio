@@ -46,6 +46,18 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   --font-heading: var(--font-sans);
+  --color-white: var(--card);
+  --color-black: var(--foreground);
+  --color-neutral-50: var(--muted);
+  --color-neutral-100: var(--secondary);
+  --color-neutral-200: var(--border);
+  --color-neutral-300: var(--border);
+  --color-neutral-400: var(--muted-foreground);
+  --color-neutral-500: var(--muted-foreground);
+  --color-neutral-600: var(--muted-foreground);
+  --color-neutral-700: var(--foreground);
+  --color-neutral-800: var(--primary);
+  --color-neutral-900: var(--primary);
 }
 
 :root {
@@ -117,6 +129,26 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.dim {
+  --background: oklch(0.93 0.012 85);
+  --foreground: oklch(0.24 0.015 70);
+  --card: oklch(0.97 0.008 85);
+  --card-foreground: oklch(0.24 0.015 70);
+  --popover: oklch(0.97 0.008 85);
+  --popover-foreground: oklch(0.24 0.015 70);
+  --primary: oklch(0.28 0.02 70);
+  --primary-foreground: oklch(0.98 0.006 85);
+  --secondary: oklch(0.88 0.015 85);
+  --secondary-foreground: oklch(0.28 0.02 70);
+  --muted: oklch(0.89 0.014 85);
+  --muted-foreground: oklch(0.48 0.02 70);
+  --accent: oklch(0.88 0.015 85);
+  --accent-foreground: oklch(0.28 0.02 70);
+  --border: oklch(0.82 0.018 85);
+  --input: oklch(0.82 0.018 85);
+  --ring: oklch(0.5 0.04 70);
+}
+
 @layer base {
   *,
   ::before,
@@ -134,6 +166,7 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "ss01", "cv11";
+    transition: background-color 180ms ease, color 180ms ease;
   }
 
   /* Default typographic rhythm */
@@ -143,7 +176,7 @@
   h4,
   h5,
   h6 {
-    @apply font-semibold tracking-tight text-neutral-900;
+    @apply font-semibold tracking-tight text-foreground;
   }
 
   p {
@@ -151,13 +184,13 @@
   }
 
   ::selection {
-    background: #0a0a0a;
+    background: var(--foreground);
     color: white;
   }
 
   /* Subtle dotted focus ring used by interactive non-form elements */
   :focus-visible {
-    outline: 2px solid #0a0a0a;
+    outline: 2px solid var(--foreground);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -165,7 +198,7 @@
 
 @layer utilities {
   .container-page {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 
   /* Quiet gradient grid used in hero background */
@@ -179,18 +212,15 @@
   }
 }
 
-#userForm input,
-#userForm textarea,
-#userForm select {
-  border: 1px solid black;
-  border-color: black;
-  border-radius: 5px;
-  padding: 5px;
-  width: 100%;
+@keyframes drawer-slide-in {
+  from { opacity: 0; transform: translate3d(0, 100%, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-#userForm label > input,
-#userForm label > textarea,
-#userForm label > select {
-  margin-top: 10px;
+@keyframes drawer-slide-out {
+  from { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 0; transform: translate3d(0, 100%, 0); }
 }
+
+[data-slot="drawer-popup"][data-swipe-direction="down"][data-starting-style] { animation: drawer-slide-in 450ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+[data-slot="drawer-popup"][data-swipe-direction="down"][data-ending-style] { animation: drawer-slide-out 450ms cubic-bezier(0.22, 1, 0.36, 1) both; }
