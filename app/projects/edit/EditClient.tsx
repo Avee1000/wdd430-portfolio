@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import SearchComp from "@/components/projects/edit/EditSearch";
-
+import Loading from "./loading";
 export default function EditClient() {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
@@ -22,14 +22,7 @@ export default function EditClient() {
 
   if (isLoading) {
     return (
-      <main className="mx-auto flex w-full min-h-dvh max-w-6xl flex-1 flex-col px-4 py-12 sm:px-6 lg:px-8">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="space-y-2">
-            <div className="h-4 w-32 rounded bg-neutral-200 animate-pulse" />
-            <div className="h-3 w-48 rounded bg-neutral-200 animate-pulse" />
-          </div>
-        </div>
-      </main>
+      <Loading />
     );
   }
 

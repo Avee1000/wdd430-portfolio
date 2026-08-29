@@ -1,5 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Inter,
+  Bricolage_Grotesque,
+} from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
 import Header from "@/components/Header";
@@ -27,9 +32,15 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-brand",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"
+    process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
   ),
   title: {
     default: "OFI-S — Software Engineer Portfolio",
@@ -75,6 +86,7 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable,
         inter.variable,
+        bricolage.variable,
         "font-sans",
       )}
     >
@@ -99,15 +111,20 @@ export default function RootLayout({
                 <Header />
                 <main
                   id="main"
-                  className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden"
+                  className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin"
                 >
                   {children}
                   <Footer />
                 </main>
-                <SonnerGlobal 
+                <SonnerGlobal
                   position="top-right"
                   className="bg-background! text-foreground! border-border!"
                   duration={2000}
+                  toastOptions={{
+                    classNames: {
+                      success: "text-green-400! bg-gray-900! border! border-gray-900!",
+                    },
+                  }}
                 />
               </div>
             </AuthProvider>

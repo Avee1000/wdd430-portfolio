@@ -69,7 +69,7 @@ export default function Header() {
         scrolled && "border-border"
       )}
     >
-      <div className="mx-auto flex h-16 w-full md:max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 md:gap-30 md:overflow-x-auto scrollbar-thin">
+      <div className="mx-auto flex h-16 w-full md:max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 md:gap-30 md:overflow-x-auto scrollbar-thin!">
         <Link
           href="/"
           className="group inline-flex shrink-0 items-center gap-2 rounded-md font-semibold tracking-tight text-neutral-955 dark:text-white"

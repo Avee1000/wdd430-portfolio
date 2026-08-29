@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Send } from "lucide-react";
-import { FaGithub as Github, FaLinkedin as Linkedin } from "react-icons/fa";
+import { FaGithub as Github, FaLinkedin as Linkedin, FaWhatsapp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { LoaderIcon } from "lucide-react";
 import { sendContactMessage, type ContactState } from "@/lib/action";
@@ -13,22 +13,29 @@ const channels = [
   {
     Icon: Mail,
     label: "Email",
-    value: "hello@example.com",
+    value: "Flourish.idahosasunny@gmail.com",
     href: "mailto:hello@example.com",
     description: "Best for project inquiries and offers.",
+  },
+    {
+    Icon: FaWhatsapp,
+    label: "Phone",
+    value: "+234 913 619 6176",
+    href: "tel:+2349136196176",
+    description: "Best for phone calls and quick messages",
   },
   {
     Icon: Github,
     label: "GitHub",
-    value: "@your-handle",
-    href: "https://github.com",
+    value: "@Avee1000",
+    href: "https://github.com/Avee1000",
     description: "Open‑source work, side projects, and contributions.",
   },
   {
     Icon: Linkedin,
     label: "LinkedIn",
-    value: "in/your-handle",
-    href: "https://linkedin.com",
+    value: "in/Osamagumwende Flourish Idahosa-Sunny",
+    href: "https://www.linkedin.com/in/idahosa-eddy-a044551a6/",
     description: "Professional experience and recommendations.",
   },
 ] as const;
@@ -94,15 +101,12 @@ export default function ContactForm() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
             <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
           </span>
-          Available · Mountain Time (UTC−7)
+          Available · Mountain Time (UTC−7) / West Africa Time (GMT +1) / Eastern Standard Time (UTC -5)
         </div>
       </section>
 
       {/* Channels */}
-      <section
-        aria-labelledby="channels-heading"
-        className="mt-14"
-      >
+      <section aria-labelledby="channels-heading" className="mt-14">
         <h2 id="channels-heading" className="sr-only">
           Contact channels
         </h2>
@@ -165,7 +169,11 @@ export default function ContactForm() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="size-4 text-neutral-400" aria-hidden />
-                <span>hello@example.com</span>
+                <span>flourish.idahosasunny@gmail.com</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="size-4 text-neutral-400" aria-hidden />
+                <span>eddyidahosa01@gmail.com</span>
               </div>
             </dl>
           </div>
@@ -190,11 +198,12 @@ export default function ContactForm() {
                 />
               </label>
               <div id="name-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.name && state.errors.name.map((error) => (
-                  <p key={error} className="mt-1 text-sm text-red-600">
-                    {error}
-                  </p>
-                ))}
+                {state.errors?.name &&
+                  state.errors.name.map((error) => (
+                    <p key={error} className="mt-1 text-sm text-red-600">
+                      {error}
+                    </p>
+                  ))}
               </div>
             </div>
 
@@ -212,11 +221,12 @@ export default function ContactForm() {
                 />
               </label>
               <div id="email-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.email && state.errors.email.map((error) => (
-                  <p key={error} className="mt-1 text-sm text-red-600">
-                    {error}
-                  </p>
-                ))}
+                {state.errors?.email &&
+                  state.errors.email.map((error) => (
+                    <p key={error} className="mt-1 text-sm text-red-600">
+                      {error}
+                    </p>
+                  ))}
               </div>
             </div>
 
@@ -233,11 +243,12 @@ export default function ContactForm() {
                 />
               </label>
               <div id="subject-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.subject && state.errors.subject.map((error) => (
-                  <p key={error} className="mt-1 text-sm text-red-600">
-                    {error}
-                  </p>
-                ))}
+                {state.errors?.subject &&
+                  state.errors.subject.map((error) => (
+                    <p key={error} className="mt-1 text-sm text-red-600">
+                      {error}
+                    </p>
+                  ))}
               </div>
             </div>
 
@@ -255,11 +266,12 @@ export default function ContactForm() {
                 />
               </label>
               <div id="message-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.message && state.errors.message.map((error) => (
-                  <p key={error} className="mt-1 text-sm text-red-600">
-                    {error}
-                  </p>
-                ))}
+                {state.errors?.message &&
+                  state.errors.message.map((error) => (
+                    <p key={error} className="mt-1 text-sm text-red-600">
+                      {error}
+                    </p>
+                  ))}
               </div>
             </div>
 

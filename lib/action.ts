@@ -29,7 +29,7 @@ const ProjectFormSchema = z.object({
                 .trim()
                 .min(1)
                 .max(
-                    30,
+                    2000,
                     "Technology names cannot exceed 30 characters."
                 )
         )
@@ -77,10 +77,11 @@ export type State = {
 function getProjectData(
     formData: FormData
 ) {
-    const technologies = formData
-        .getAll("technologies")
+    const rawTechnologies = (formData.getAll("technologies") ?? []).join(",");
+    const technologies = rawTechnologies
+        .split(",")
         .map(value =>
-            String(value)
+            value
                 .trim()
                 .replace(/\s+/g, " ")
         )
@@ -120,28 +121,26 @@ function getProjectData(
 
 
 export async function requireAdmin() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("session")?.value ?? null;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("session")?.value ?? null;
 
-  if (!token) {
-    redirect("/login");
-  }
+    if (!token) {
+        redirect("/login");
+    }
 
-  const session = await readSessionToken(token);
-  if (!session) {
-    redirect("/login");
-  }
+    const session = await readSessionToken(token);
+    if (!session) {
+        redirect("/login");
+    }
 
-  return session;
+    return session;
 }
 
 export async function createProject(prevState: State, formData: FormData): Promise<State> {
-  await requireAdmin();
+    await requireAdmin();
 
     const parsed = ProjectFormSchema.safeParse(getProjectData(formData));
-    // if (!parsed.success) {
-    //     throw new Error('Invalid project input.' + parsed.error.toString());
-    // }
+
     if (!parsed.success) {
         return {
             errors: parsed.error.flatten().fieldErrors,
@@ -150,6 +149,7 @@ export async function createProject(prevState: State, formData: FormData): Promi
     }
 
     const { title, description, type, technologies, link } = parsed.data;
+    console.log(parsed.data)
     try {
         await sql`INSERT INTO projects (title, description, type, technologies, link) VALUES (${title}, ${description}, ${type}, ${technologies as unknown as string}::text[], ${link})`;
     } catch {
@@ -158,7 +158,11 @@ export async function createProject(prevState: State, formData: FormData): Promi
         }
     }
     revalidatePath('/projects');
-    redirect('/projects');
+    return {
+        message: 'Project created successfully.',
+        success: true,
+        errors: {},
+    };
 }
 
 const ContactSchema = z.object({
@@ -200,8 +204,8 @@ export async function sendContactMessage(prevState: ContactState, formData: Form
         const apiKey = process.env.BREVO_API_KEY;
         if (apiKey) {
             const { BrevoClient } = await import("@getbrevo/brevo");
-            const client = new BrevoClient({ apiKey } as any); 
-            await (client.transactionalEmails as any).sendEmail({ 
+            const client = new BrevoClient({ apiKey });
+            await (client.transactionalEmails).sendTransacEmail({
                 sender: { email: "hello@example.com", name: "Portfolio Contact" },
                 to: [{ email: "hello@example.com" }],
                 subject: `Contact Form: ${subject}`,
@@ -222,13 +226,13 @@ export async function sendContactMessage(prevState: ContactState, formData: Form
 }
 
 export async function deleteProject(id: number) {
-  await requireAdmin();
-  await sql`DELETE FROM projects WHERE id = ${id}`;
-  revalidatePath('/projects');
+    await requireAdmin();
+    await sql`DELETE FROM projects WHERE id = ${id}`;
+    revalidatePath('/projects/edit');
 }
 
 export async function updateProject(id: string | number, prevState: State, formData: FormData): Promise<State> {
-  await requireAdmin();
+    await requireAdmin();
     const parsed = ProjectFormSchema.safeParse(getProjectData(formData));
 
     if (!parsed.success) {
@@ -252,7 +256,7 @@ export async function updateProject(id: string | number, prevState: State, formD
     } catch {
         // throw new Error("Failed to update project.");
         return {
-            message: 'Database Error: Failed to create project.'
+            message: 'Failed to create project.'
         }
     }
     revalidatePath('/projects');
@@ -261,5 +265,57 @@ export async function updateProject(id: string | number, prevState: State, formD
         message: 'Project updated successfully.',
         errors: {},
         success: true,
+    };
+}
+
+export async function createProjectDep(prevState: State, formData: FormData): Promise<State> {
+    await requireAdmin();
+
+    // 1. Extract raw data from FormData
+    const rawTechnologies = formData.get('technologies') as string;
+
+    // 2. Split comma-separated technologies into a real string array
+    const parsedTechnologies = rawTechnologies 
+        ? rawTechnologies.split(',').map(tech => tech.trim()).filter(Boolean)
+        : [];
+
+    // 3. Construct object for Zod validation with the formatted array
+    const rawFormData = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        type: formData.get('type'),
+        link: formData.get('link'),
+        technologies: parsedTechnologies, // Pass real array to Zod schema
+    };
+
+    const parsed = ProjectFormSchema.safeParse(rawFormData);
+
+    if (!parsed.success) {
+        return {
+            errors: parsed.error.flatten().fieldErrors,
+            message: 'Missing or invalid fields. Failed to create project.',
+        };
+    }
+
+    const { title, description, type, technologies, link } = parsed.data;
+
+    try {
+        // 4. Pass the array directly without `as unknown as string::text[]`
+        await sql`
+            INSERT INTO projects (title, description, type, technologies, link) 
+            VALUES (${title}, ${description}, ${type}, ${technologies[0]}::text[], ${link})
+        `;
+    } catch (error) {
+        console.error("Database insert error:", error);
+        return {
+            message: 'Database Error: Failed to create project.'
+        };
+    }
+
+    revalidatePath('/projects');
+    
+    return {
+        message: 'Project created successfully.',
+        errors: {},
     };
 }

@@ -55,7 +55,7 @@ export default function Projects() {
             New project
           </Link>
           <Link
-            href="/"
+            href="/projects/edit"
             className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50"
           >
             Edit projects

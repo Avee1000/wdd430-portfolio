@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
     <div
-      className="container-page min-h-[900px] py-16 sm:py-20"
+      className="container-page min-h-225 py-16 sm:py-20"
       role="status"
       aria-label="Loading about"
     >

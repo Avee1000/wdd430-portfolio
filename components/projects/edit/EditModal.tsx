@@ -11,7 +11,6 @@ import {
   useTransition,
 } from "react";
 import { X, LoaderIcon, Check } from "lucide-react";
-import { useFormStatus } from "react-dom";
 import { ProjectProps } from "./EditProjects";
 import {
   Drawer,
@@ -20,7 +19,6 @@ import {
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerFooter,
 } from "@/components/ui/drawer";
 import {
   Select,
@@ -29,6 +27,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialState: State = {
   message: null,
@@ -40,14 +40,14 @@ interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
   project: ProjectProps;
+  pathname?: string;
 
-  onSaving: () => void;
-  onSuccess: () => void;
-  onError: (message: string) => void;
+  onSaving?: () => void;
+  onSuccess?: () => void;
+  onError?: (message: string) => void;
 }
 
-function Submit() {
-  const { pending } = useFormStatus();
+function Submit({ pending }: { pending: boolean }) {
   return (
     <Button
       type={pending ? "button" : "submit"}
@@ -56,9 +56,7 @@ function Submit() {
       className="w-auto bg-foreground border border-black text-background hover:opacity-85"
     >
       {pending ? (
-        <>
-          <LoaderIcon className="animate-spin" />
-        </>
+        <LoaderIcon className="animate-spin" />
       ) : (
         <>
           <Check />
@@ -73,6 +71,7 @@ export default function Edit({
   isOpen,
   onClose,
   project,
+  pathname,
   onSaving,
   onSuccess,
   onError,
@@ -81,54 +80,62 @@ export default function Edit({
     updateProject.bind(null, project.id),
     initialState,
   );
+  const [isPending, startTransition] = useTransition();
+  const queryClient = useQueryClient();
 
   const [techs, setTechs] = useState<string[]>(project.technologies || []);
   const [type, setType] = useState<ProjectProps["type"]>(project.type);
   const [input, setInput] = useState("");
-  const [isPending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
   const [formKey, setFormKey] = useState(0);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const prevStateRef = useRef<string>("");
+  const toastIdRef = useRef<string | number | null>(null);
 
-  // Reset the form state each time the drawer opens so the fields match the project.
-  useEffect(() => {
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setTechs(project.technologies || []);
       setType(project.type);
       setInput("");
       setFormKey((k) => k + 1);
     }
-  }, [isOpen, project]);
+  }
 
-  // Track when the action completes to check for errors
   useEffect(() => {
-    if (
-      !state.message &&
-      (!state.errors || Object.keys(state.errors).length === 0)
-    ) {
-      return;
+    const serialized = JSON.stringify(state);
+    if (serialized === prevStateRef.current) return;
+    prevStateRef.current = serialized;
+
+    if (!state.message) return;
+
+    if (toastIdRef.current) {
+      toast.dismiss(toastIdRef.current);
+      toastIdRef.current = null;
     }
 
     if (state.errors && Object.keys(state.errors).length > 0) {
-      onError(state.message || "Failed to updateProject");
+      onError?.(state.message || "Failed to update project");
+      toast.error(state.message);
       return;
     }
 
-    if (state.success === true) {
-      onSuccess();
+    if (state.success) {
+      onSuccess?.();
+      toast.success(state.message, {
+        className: "text-green-400! bg-gray-900!",
+      });
+      queryClient.invalidateQueries({ queryKey: ["school-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["edit-projects"] });
     }
-  }, [state, onSuccess, onError]);
-
-  const handleClose = () => {
-    onClose();
-  };
+  }, [state, pathname, onSuccess, onError, queryClient]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSaving();
+    onSaving?.();
+    toastIdRef.current = toast.loading("Updating project...");
     const formData = new FormData(e.currentTarget);
-    startTransition(() => {
-      formAction(formData);
-    });
+    startTransition(() => formAction(formData));
   };
 
   const addTech = (value: string) => {
@@ -325,7 +332,7 @@ export default function Edit({
             </div>
             <div className="flex flex-col-reverse gap-1 mt-6">
               <DrawerClose render={<Button variant="outline">Cancel</Button>} />
-              <Submit />
+              <Submit pending={isPending} />
             </div>
           </form>
         </div>
