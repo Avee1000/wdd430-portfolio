@@ -96,7 +96,7 @@ export default function RootLayout({
       >
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-[#0a0a0a] focus:px-3 focus:py-2 focus:text-sm focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-[#0a0a0a] focus:px-3 focus:py-2 focus:text-sm focus:text-white selection:dark:text-[#1a1a1a]"
         >
           Skip to main content
         </a>

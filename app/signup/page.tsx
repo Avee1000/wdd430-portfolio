@@ -7,6 +7,7 @@ import { useAuth } from '@/components/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
+import { notFound } from 'next/navigation'
 
 export default function SignupPage() {
   const router = useRouter()
@@ -16,7 +17,7 @@ export default function SignupPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-
+  console.log(isAuthenticated)
   useEffect(() => {
     if (isAuthenticated) {
       router.replace('/projects')
@@ -50,6 +51,8 @@ export default function SignupPage() {
       setLoading(false)
     }
   }
+
+  if (!isAuthenticated) return notFound();
 
   return (
     <div className="flex min-h-[80vh] h-full items-center justify-center px-4">

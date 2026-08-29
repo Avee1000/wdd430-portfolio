@@ -207,18 +207,24 @@ export default function HomePage() {
                 {Array.from({ length: 6 }).map((_, i) => (
                   <article
                     key={i}
-                    className="h-52 animate-pulse rounded-2xl border border-neutral-200 bg-white p-6"
+                    className="min-h-59 rounded-2xl border border-border bg-card p-6"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-lg bg-neutral-200" />
-                      <div className="space-y-2">
-                        <div className="h-4 w-32 rounded bg-neutral-200" />
-                        <div className="h-3 w-20 rounded bg-neutral-200" />
+                    <div className="flex items-start gap-3">
+                      <div className="size-9 shrink-0 rounded-lg bg-muted" />
+                      <div className="min-w-0 flex-1 space-y-2">
+                        <div className="h-4 w-3/4 rounded bg-muted" />
+                        <div className="h-3 w-1/4 rounded bg-muted" />
                       </div>
                     </div>
-                    <div className="mt-5 space-y-2">
-                      <div className="h-3 w-full rounded bg-neutral-200" />
-                      <div className="h-3 w-4/5 rounded bg-neutral-200" />
+                    <div className="mt-4 space-y-2">
+                      <div className="h-3 w-full rounded bg-muted" />
+                      <div className="h-3 w-5/6 rounded bg-muted" />
+                      <div className="h-3 w-2/3 rounded bg-muted" />
+                    </div>
+                    <div className="mt-5 flex gap-1.5">
+                      <div className="h-6 w-16 rounded-full bg-muted" />
+                      <div className="h-6 w-20 rounded-full bg-muted" />
+                      <div className="h-6 w-14 rounded-full bg-muted" />
                     </div>
                   </article>
                 ))}

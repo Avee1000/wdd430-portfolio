@@ -6,6 +6,7 @@ import { z } from "zod";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { readSessionToken } from "@/lib/auth";
+import { sendContactNotificationEmail } from "@/lib/email/contact";
 
 const ProjectFormSchema = z.object({
 
@@ -199,19 +200,15 @@ export async function sendContactMessage(prevState: ContactState, formData: Form
     }
 
     const { name, email, subject, message } = parsed.data;
+    console.log(parsed.data)
 
     try {
-        const apiKey = process.env.BREVO_API_KEY;
-        if (apiKey) {
-            const { BrevoClient } = await import("@getbrevo/brevo");
-            const client = new BrevoClient({ apiKey });
-            await (client.transactionalEmails).sendTransacEmail({
-                sender: { email: "hello@example.com", name: "Portfolio Contact" },
-                to: [{ email: "hello@example.com" }],
-                subject: `Contact Form: ${subject}`,
-                htmlContent: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong></p><p>${message.replace(/\n/g, "<br>")}</p>`,
-            });
-        }
+        await sendContactNotificationEmail({
+            senderEmail: email,
+            senderName: name,
+            subject,
+            message: message,
+        });
     } catch {
         return {
             message: "Failed to send message. Please try again later.",

@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/modern-ui/tooltip";
 
 export interface ProjectCardProps {
   id?: string | number;
@@ -24,7 +30,7 @@ export default function ProjectCard({
     <article
       className={cn(
         "group relative flex h-full flex-col rounded-2xl border border-neutral-200 bg-white p-6 shadow-[0_1px_0_0_rgba(10,10,10,0.02)] transition-all duration-200 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-[0_8px_24px_-12px_rgba(10,10,10,0.12)]",
-        className
+        className,
       )}
     >
       <header className="flex items-start justify-between gap-4">
@@ -62,9 +68,23 @@ export default function ProjectCard({
         )}
       </header>
 
-      <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-neutral-600">
-        {description}
-      </p>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <p className="mt-4 min-h-10 h-11 line-clamp-2 text-sm leading-relaxed text-neutral-600">
+              {description}
+            </p>
+          </TooltipTrigger>
+          <TooltipContent
+            side="right"
+            className="bg-background border border-muted-foreground/50"
+          >
+            <p className="wrap-break-word max-w-md h-auto text-sm leading-relaxed text-neutral-600">
+              {description}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       {technologies?.length > 0 && (
         <ul className="mt-5 flex flex-wrap gap-1.5">

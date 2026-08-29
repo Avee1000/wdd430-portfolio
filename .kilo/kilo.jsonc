@@ -1,6 +1,6 @@
 {
   "$schema": "https://app.kilo.ai/config.json",
   "commit_message": {
-    "prompt": "Analyze the staged git diff and write a concise commit message using the Conventional Commits format.\n\nFormat:\n<type>(<optional scope>): <detailed description>\n<optional body with bullet points explaining WHY the change was made, not just what changed>\n\nAllowed types:\n- feat: new functionality\n- fix: bug fix\n- refactor: code restructuring without behavior change\n- docs: documentation updates\n- test: adding or updating tests\n- chore: maintenance, dependencies, or build config\n\nRules:\n1. Do not use conversational filler or markdown code blocks in the output—return only the raw commit message text.\n2. Use the imperative mood in the subject line (e.g., \"add\" instead of \"added\" or \"adds\").\n3. Keep the first line under 50 characters and do not end it with a period.\n4. Focus on the developer or user-facing intent.",
+    "prompt": "",
   },
 }

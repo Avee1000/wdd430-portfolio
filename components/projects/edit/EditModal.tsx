@@ -78,7 +78,7 @@ export default function Edit({
 }: EditModalProps) {
   const [state, formAction] = useActionState(
     updateProject.bind(null, project.id),
-    initialState,
+    initialState
   );
   const [isPending, startTransition] = useTransition();
   const queryClient = useQueryClient();
@@ -89,9 +89,12 @@ export default function Edit({
   const inputRef = useRef<HTMLInputElement>(null);
   const [formKey, setFormKey] = useState(0);
   const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
-  const prevStateRef = useRef<string>("");
+  
+  // Track whether a submit action was intentionally triggered
+  const isSubmittingRef = useRef<boolean>(false);
   const toastIdRef = useRef<string | number | null>(null);
 
+  // Sync component state when modal opens
   if (isOpen !== prevIsOpen) {
     setPrevIsOpen(isOpen);
     if (isOpen) {
@@ -102,12 +105,19 @@ export default function Edit({
     }
   }
 
+  // Clear toast and submit flag when modal opens/closes
   useEffect(() => {
-    const serialized = JSON.stringify(state);
-    if (serialized === prevStateRef.current) return;
-    prevStateRef.current = serialized;
+    if (isOpen) {
+      isSubmittingRef.current = false;
+      if (toastIdRef.current) {
+        toast.dismiss(toastIdRef.current);
+        toastIdRef.current = null;
+      }
+    }
+  }, [isOpen]);
 
-    if (!state.message) return;
+  useEffect(() => {
+    if (!isSubmittingRef.current || !state.message) return;
 
     if (toastIdRef.current) {
       toast.dismiss(toastIdRef.current);
@@ -117,6 +127,7 @@ export default function Edit({
     if (state.errors && Object.keys(state.errors).length > 0) {
       onError?.(state.message || "Failed to update project");
       toast.error(state.message);
+      isSubmittingRef.current = false; 
       return;
     }
 
@@ -127,11 +138,15 @@ export default function Edit({
       });
       queryClient.invalidateQueries({ queryKey: ["school-projects"] });
       queryClient.invalidateQueries({ queryKey: ["edit-projects"] });
+      
+      isSubmittingRef.current = false; 
+      onClose(); 
     }
-  }, [state, pathname, onSuccess, onError, queryClient]);
+  }, [state, pathname, onSuccess, onError, queryClient, onClose]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    isSubmittingRef.current = true; 
     onSaving?.();
     toastIdRef.current = toast.loading("Updating project...");
     const formData = new FormData(e.currentTarget);

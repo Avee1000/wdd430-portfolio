@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useTransition } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Send } from "lucide-react";
@@ -8,6 +8,8 @@ import { FaGithub as Github, FaLinkedin as Linkedin, FaWhatsapp } from "react-ic
 import { Button } from "@/components/ui/button";
 import { LoaderIcon } from "lucide-react";
 import { sendContactMessage, type ContactState } from "@/lib/action";
+import { toast } from 'sonner';
+
 
 const channels = [
   {
@@ -70,12 +72,40 @@ function SubmitButton() {
 export default function ContactForm() {
   const [state, formAction] = useActionState(sendContactMessage, initialState);
   const formRef = useRef<HTMLFormElement>(null);
+  const [isPending, startTransition] = useTransition();
 
-  useEffect(() => {
-    if (state.success) {
-      formRef.current?.reset();
-    }
-  }, [state.success]);
+  // useEffect(() => {
+  //   if (state.success) {
+  //     formRef.current?.reset();
+  //   }
+  // }, [state.success]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    toast.promise(
+      new Promise((resolve, reject) => {
+        startTransition(async () => {
+          const res = await sendContactMessage(state, formData);
+          if (res?.errors && Object.keys(res.errors).length > 0) {
+            reject(res.message || "Please fix the validation errors.")
+          } else {
+            resolve(res?.message || "Email sent successfully!");
+            if (res?.success) {
+              formRef.current?.reset();
+            }
+          }
+        });
+      }),
+      {
+        loading: "Sending email...",
+        success: (data) => `${data}`,
+        error: (err) => `${err}`,
+        duration: 2000
+      }, 
+    )
+  }
 
   return (
     <div className="container-page py-16 sm:py-20">
@@ -110,7 +140,7 @@ export default function ContactForm() {
         <h2 id="channels-heading" className="sr-only">
           Contact channels
         </h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {channels.map(({ Icon, label, value, href, description }) => (
             <Link
               key={label}
@@ -179,7 +209,7 @@ export default function ContactForm() {
           </div>
           <form
             ref={formRef}
-            action={formAction}
+            onSubmit={handleSubmit}
             id="userForm"
             className="flex flex-col gap-5"
             aria-label="Contact form"
