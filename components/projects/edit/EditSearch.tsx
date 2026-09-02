@@ -4,10 +4,10 @@ import { useState } from "react";
 import DeleteProjects, {
   ProjectProps,
 } from "@/components/projects/edit/EditProjects";
-import SearchInput from "@/components/SearchInput";
+import SearchInput from "@/components/global/SearchInput";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import Pagination from "@/components/HomePagination";
+import Pagination from "@/components/global/HomePagination";
 
 interface SearchCompProps {
   initialProjects: ProjectProps[];

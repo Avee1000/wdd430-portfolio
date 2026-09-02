@@ -6,13 +6,66 @@ import {
   Bricolage_Grotesque,
 } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "@/components/auth-provider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { AuthProvider } from "@/components/global/auth-provider";
+import Header from "@/components/global/Header";
+import Footer from "@/components/global/Footer";
 import { cn } from "@/lib/utils";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import QueryProvider from "@/components/query-provider";
+import { ThemeProvider } from "@/components/global/ThemeProvider";
+import QueryProvider from "@/components/global/query-provider";
 import { SonnerGlobal } from "@/components/modern-ui/sonner";
+import localFont from 'next/font/local';
+
+const thicccboi = localFont({
+  src: [
+    {
+      path: '../public/font/THICCCBOI-Thin.woff2',
+      weight: '100',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-SemiBold.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-ExtraBold.woff2',
+      weight: '800',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-Black.woff2',
+      weight: '900',
+      style: 'normal',
+    },
+    {
+      path: '../public/font/THICCCBOI-ThicccAF.woff2',
+      weight: '950', // 
+      style: 'normal',
+    },
+  ],
+  variable: '--font-thicccboi', // This creates the CSS variable
+});
+
 
 const inter = Inter({
   subsets: ["latin"],
@@ -87,6 +140,7 @@ export default function RootLayout({
         geistMono.variable,
         inter.variable,
         bricolage.variable,
+        thicccboi.variable,
         "font-sans",
       )}
     >
@@ -111,7 +165,7 @@ export default function RootLayout({
                 <Header />
                 <main
                   id="main"
-                  className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin"
+                  className="min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin pt-16"
                 >
                   {children}
                   <Footer />

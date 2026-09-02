@@ -3,7 +3,7 @@
   company: string;
   startDate: string;
   endDate: string;
-  description: string;
+  description: string[];
   skills: string[];
 }
 
@@ -20,7 +20,7 @@ export const workHistory: Work[] = [
       "Verify data across systems to ensure consistency and eliminate discrepancies.",
       "Send clear feedback to agents on what needs to be fixed or improved.",
       "Reviewed time-sensitive academic exception cases to ensure accurate processing within strict institutional deadlines.",
-    ].join(" "),
+    ],
     skills: [
       "Quality assurance",
       "Policy compliance",
@@ -40,7 +40,7 @@ export const workHistory: Work[] = [
       "Scrutinize transcripts for discrepancies, inconsistencies, or missing data.",
       "Maintain up-to-date documentation of transcript reviews and status reports.",
       "Handle confidential academic records with discretion and in compliance with data protection policies.",
-    ].join(" "),
+    ],
     skills: [
       "Transcript verification",
       "Records accuracy",
@@ -60,7 +60,7 @@ export const workHistory: Work[] = [
       "Manage and update media outreach tracking spreadsheets and databases.",
       "Monitor social media and online channels for relevant conversations and mentions.",
       "Develop supporting materials such as presentations, media kits, and pitch documents.",
-    ].join(" "),
+    ],
     skills: [
       "Media research",
       "Outreach copywriting",
@@ -79,7 +79,7 @@ export const workHistory: Work[] = [
       "Help others learn about their ancestors by comparing and attaching records gotten from historical documents to Family.",
       "Work and learn collaboratively as part of a team to meet the company's target.",
       "Participated in a work-study program, enhancing technical proficiency and job readiness by 40%.",
-    ].join(" "),
+    ],
     skills: [
       "Historical document transcription",
       "Genealogical research",

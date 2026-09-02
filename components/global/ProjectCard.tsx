@@ -76,10 +76,10 @@ export default function ProjectCard({
             </p>
           </TooltipTrigger>
           <TooltipContent
-            side="right"
+            side="top"
             className="bg-background border border-muted-foreground/50"
           >
-            <p className="wrap-break-word max-w-md h-auto text-sm leading-relaxed text-neutral-600">
+            <p className="wrap-break-word max-w-sm h-auto text-sm leading-relaxed text-neutral-600">
               {description}
             </p>
           </TooltipContent>

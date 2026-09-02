@@ -4,8 +4,6 @@ import { sendEmail } from './index';
 interface ContactEmailParams {
   senderEmail: string;
   senderName: string;
-  // toName: string;
-  // toEmail: string;
   subject: string;
   message: string;
 }
@@ -16,6 +14,10 @@ export async function sendContactNotificationEmail({
   subject,
   message,
 }: ContactEmailParams) {
+  // Use public environment domain or fallback to production domain
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const logoUrl = `${baseUrl}/logo.png`;
+
   return sendEmail({
     senderEmail,
     senderName,
@@ -51,9 +53,15 @@ export async function sendContactNotificationEmail({
                   </tr>
 
                   <tr>
-                    <td align="left" valign="top" style="padding: 32px 32px 16px 32px;">
+                    <td align="left" valign="middle" style="padding: 32px 32px 16px 32px;">
                       <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 20px; color: #0a0a0a; letter-spacing: -0.5px;">
-                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background-color: #0a0a0a; color: #FFFFFF; border-radius: 6px; font-size: 14px; font-weight: 700; margin-right: 8px; vertical-align: middle;">O</span>
+                        <img 
+                          src="${logoUrl}"
+                          alt="OFI-S Logo" 
+                          width="28" 
+                          height="28" 
+                          style="display: inline-block; vertical-align: middle; border: 0; border-radius: 6px;" 
+                        />
                         OFI‑S
                       </span>
                     </td>

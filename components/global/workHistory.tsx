@@ -6,7 +6,7 @@ interface WorkHistoryProps {
   company: string;
   startDate: string;
   endDate: string;
-  description: string;
+  description: string[];
   skills: string[];
 }
 
@@ -40,9 +40,11 @@ export default function WorkHistory({
         </span>
       </header>
 
-      <p className="mt-4 line-clamp-4 text-sm leading-relaxed text-neutral-600">
-        {description}
-      </p>
+      <ul className="mt-4 list-disc space-y-1 pl-4 text-sm leading-relaxed text-neutral-600">
+        {description.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
 
       {skills?.length > 0 && (
         <ul className="mt-5 flex flex-wrap gap-1.5">

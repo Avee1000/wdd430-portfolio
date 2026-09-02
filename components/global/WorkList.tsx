@@ -1,13 +1,5 @@
 import WorkHistory from "./workHistory";
-
-interface Work {
-  title: string;
-  company: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-  skills: string[];
-}
+import type { Work } from "@/data/workHistory";
 
 interface WorkListProps {
   works: Work[];

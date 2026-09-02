@@ -4,7 +4,7 @@ import { X, Pencil, ArrowUpRight } from "lucide-react";
 import { deleteProject } from "@/lib/action";
 import { useState } from "react";
 import Edit from "./EditModal";
-import SaveToast from "../../StatusToast";
+import SaveToast from "../../global/StatusToast";
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 import { useSearchParams } from "next/navigation";

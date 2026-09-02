@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/global/auth-provider";
 import { Button } from "@/components/ui/button";
-import { Mail, Lock, ArrowLeft } from "lucide-react";
+import { Mail, Lock, ArrowLeft, LoaderCircleIcon } from "lucide-react";
 import { toast } from "sonner";
 
 export default function LoginPage() {
@@ -120,7 +120,7 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full bg-foreground text-background hover:opacity-85"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? <><LoaderCircleIcon className="animate-spin" /> Signing in...</> : "Sign in"}
             </Button>
           </form>
 

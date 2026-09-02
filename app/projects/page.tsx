@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import ProjectCard, { type ProjectCardProps as Project } from "@/components/ProjectCard";
-import Pagination from "@/components/Pagination";
-import SearchInput from "@/components/SearchInput";
+import ProjectCard, { type ProjectCardProps as Project } from "@/components/global/ProjectCard";
+import Pagination from "@/components/global/Pagination";
+import SearchInput from "@/components/global/SearchInput";
 
 export default function Projects() {
   const searchParams = useSearchParams();
@@ -43,7 +43,7 @@ export default function Projects() {
           Work worth exploring
         </h1>
         <p className="mt-3 max-w-xl text-sm leading-relaxed text-neutral-600">
-          Open‑source projects and school work — every project is sourced from
+          Open‑source projects and school work. Every project is sourced from
           the database.
         </p>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">

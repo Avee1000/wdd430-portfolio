@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useAuth } from '@/components/auth-provider'
+import { useAuth } from '@/components/global/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Mail, Lock, User, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'

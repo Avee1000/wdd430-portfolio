@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import DeleteProjects, { ProjectProps } from "@/components/projects/edit/EditProjects";
-import Pagination from "@/components/Pagination";
+import Pagination from "@/components/global/Pagination";
 
 export default function Projects() {
   const searchParams = useSearchParams();

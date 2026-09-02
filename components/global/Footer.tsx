@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { FaGithub as Github, FaLinkedin as Linkedin } from "react-icons/fa";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/global/auth-provider";
 import { usePathname } from "next/navigation";
 
 const socialLinks = [
@@ -116,6 +116,9 @@ export default function Footer() {
             Built with Next.js · TypeScript · Tailwind
           </p>
         </div>
+      </div>
+      <div>
+        <p className="text-neutral-400 text-center text-xs">Built by Flourish (Avee1000)</p>
       </div>
     </footer>
   );

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 import { sql } from '@vercel/postgres'
 import { verifyPassword, createSessionToken } from '@/lib/auth'
-import { ensureUsersTable } from '@/lib/auth-schema'
+// import { ensureUsersTable } from '@/lib/auth-schema'
 
 export async function POST(request: Request) {
-  await ensureUsersTable()
+  // await ensureUsersTable()
   const body = await request.json().catch(() => ({}))
 
   const { email, password } = body as {

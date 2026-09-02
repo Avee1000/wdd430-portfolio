@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Code2, GraduationCap, Lightbulb, User } from "lucide-react";
-import WorkList from "@/components/WorkList";
+import WorkList from "@/components/global/WorkList";
 import type { Work } from "@/data/workHistory";
 import { workHistory } from "@/data/workHistory";
 
@@ -38,18 +38,18 @@ export default async function About() {
         </span>
         <h1
           id="about-heading"
-          className="mt-5 text-balance text-3xl font-semibold tracking-tight text-neutral-900 sm:text-4xl"
+          className="mt-5 text-balance text-3xl font-semibold tracking-tight text-neutral-900 sm:text-6xl"
         >
-          Engineer, builder, and curious generalist.
+          Virtual assistant, builder, and curious generalist.
         </h1>
-        <p className="mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-neutral-600 sm:text-base">
+        {/* <p className="mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-neutral-600 sm:text-base">
           I build web products that feel inevitable — fast, accessible, and
           quietly polished. My work spans Next.js applications, design systems,
           and the data and infrastructure that holds them together.
-        </p>
+        </p> */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <Link
-            href="/projects"
+            href="/#work"
             className="inline-flex items-center gap-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
           >
             See my work

@@ -4,9 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowRight, ArrowUpRight, Code2, Activity, Zap } from "lucide-react";
-import ProjectList from "@/components/ProjectList";
-import { ProjectSearch } from "@/components/ProjectSearch";
-import Pagination from "@/components/HomePagination";
+import ProjectList from "@/components/global/ProjectList";
+import { ProjectSearch } from "@/components/global/ProjectSearch";
+import Pagination from "@/components/global/HomePagination";
 import { FaGithub as Github } from "react-icons/fa";
 import Image from "next/image";
 
@@ -272,7 +272,7 @@ export default function HomePage() {
             {[
               {
                 title: "Product Engineering",
-                body: "Design and ship full‑stack features with TypeScript, React, and server‑side rendering.",
+                body: "Design and ship Progressive Web Apps with TypeScript, React, and server‑side rendering.",
               },
               {
                 title: "Design Systems",
@@ -280,14 +280,13 @@ export default function HomePage() {
               },
               {
                 title: "Data & APIs",
-                body: "Design resilient data layers with PostgreSQL, REST, and modern auth.",
+                body: "Design data with PostgreSQL, REST, and modern auth.",
               },
             ].map((c) => (
               <article
                 key={c.title}
                 className="group rounded-2xl border border-neutral-200 bg-white p-6 transition-colors hover:border-neutral-300"
               >
-                <Zap className="size-5 text-neutral-900" aria-hidden />
                 <h3 className="mt-4 text-base font-semibold text-neutral-900">
                   {c.title}
                 </h3>

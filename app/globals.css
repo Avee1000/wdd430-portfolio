@@ -7,8 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-brand: var(--font-brand);
+  --font-sans: var(--font-thicccboi);
   --font-mono: var(--font-geist-mono);
+  --font-geist: var(--font-geist-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -164,7 +166,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-brand;
     font-feature-settings: "ss01", "cv11";
     transition: background-color 180ms ease, color 180ms ease;
   }
@@ -185,7 +187,7 @@
 
   ::selection {
     background: var(--foreground);
-    color: white;
+    color: var(--card);
   }
 
   /* Subtle dotted focus ring used by interactive non-form elements */
@@ -224,3 +226,22 @@
 
 [data-slot="drawer-popup"][data-swipe-direction="down"][data-starting-style] { animation: drawer-slide-in 450ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 [data-slot="drawer-popup"][data-swipe-direction="down"][data-ending-style] { animation: drawer-slide-out 450ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+p {
+  font-family: var(--font-brand);
+}
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-sans);
+  }
+
+  @media (max-width: 768px) {
+  html {
+    font-size: calc(100% - 3px) !important;
+  }
+  }

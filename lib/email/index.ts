@@ -1,6 +1,6 @@
 // lib/email/index.ts
-import { email } from 'zod';
 import { brevo, devTransporter, parseBrevoError } from './brevo';
+
 
 export interface SendEmailOptions {
     toEmail?: string;
@@ -11,9 +11,9 @@ export interface SendEmailOptions {
     htmlContent: string;
 }
 
-export async function sendEmail({ toEmail, toName, senderEmail, senderName, subject, htmlContent }: SendEmailOptions) {
-    // 🟢 DEVELOPMENT: Send to Mailpit (0 Brevo Credits Used)
-    if (process.env.NODE_ENV === 'development') {
+export async function sendEmail({ senderEmail, senderName, subject, htmlContent }: SendEmailOptions) {
+
+    if (process.env.NODE_ENV === 'production') {
         try {
             const info = await devTransporter.sendMail({
                 from: `Portfolio Contact Form <flourish.coding@gmail.com>`,
@@ -21,7 +21,7 @@ export async function sendEmail({ toEmail, toName, senderEmail, senderName, subj
                 subject: subject,
                 replyTo: `${senderName} <${senderEmail}>`,
                 html: htmlContent,
-                cc: "eddyidahosa01@gmail.com"
+                cc: "eddyidahosa01@gmail.com",
             });
 
             console.log('✉️ [MAILPIT] Email captured! Message ID:', info.messageId, process.env.SENDER_EMAIL
@@ -48,8 +48,8 @@ export async function sendEmail({ toEmail, toName, senderEmail, senderName, subj
                 }
             ],
             replyTo: {
-              email: senderEmail as string,
-              name: senderName  
+                email: senderEmail as string,
+                name: senderName
             },
             htmlContent,
             cc: [
@@ -57,7 +57,13 @@ export async function sendEmail({ toEmail, toName, senderEmail, senderName, subj
                     email: "eddyidahosa01@gmail.com",
                     name: "Osamagumwende Flourish Idahosa-Sunny"
                 }
-            ]
+            ],
+            // attachment: [
+            //     {
+            //         name: "logo.png",
+            //         content: logoBase64
+            //     }
+            // ]
         });
 
         console.log('✉️ [MAILPIT] Email captured! Message ID:', response.messageId, process.env.SENDER_EMAIL);
