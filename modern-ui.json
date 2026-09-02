@@ -40,6 +40,11 @@
       "name": "date-picker",
       "version": "latest",
       "installedAt": "2026-08-31T12:47:30.088Z"
+    },
+    {
+      "name": "use-click-away",
+      "version": "latest",
+      "installedAt": "2026-09-02T19:42:27.098Z"
     }
   ],
   "aliases": {
