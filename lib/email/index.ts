@@ -13,7 +13,7 @@ export interface SendEmailOptions {
 
 export async function sendEmail({ senderEmail, senderName, subject, htmlContent }: SendEmailOptions) {
 
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'development') {
         try {
             const info = await devTransporter.sendMail({
                 from: `Portfolio Contact Form <flourish.coding@gmail.com>`,

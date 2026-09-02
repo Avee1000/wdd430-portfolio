@@ -15,8 +15,8 @@ export async function sendContactNotificationEmail({
   message,
 }: ContactEmailParams) {
   // Use public environment domain or fallback to production domain
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const logoUrl = `${baseUrl}/logo.png`;
+  // const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const logoUrl = `https://dgiqlhyqe2.ufs.sh/f/Znjn51yCVNkWP9h3coapdavRfCSeEtlr5LBqgx0TKhywoD21`;
 
   return sendEmail({
     senderEmail,
